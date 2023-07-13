@@ -16,7 +16,7 @@
 | algorithm |         | bool   | getUserInput | [16_6_4](https://github.com/VladislavNovak/16_6_4/blob/5e27ffd9e4b65dbeb05fa8feb3af24d4e61339e0/main.cpp#L12) |
 
 ```c++
-bool isIncludes(const char &item, const std::string &range) {
+bool isIncludes(const std::string &range, const char &item) {
     return std::any_of(range.begin(),
                        range.end(),
                        [&item](const char &c) { return c == item; });
@@ -42,6 +42,55 @@ bool isNumeric(std::string const &str) {
     return !str.empty() && it == str.end();
 }
 ```
+
+---
+### `bool isStringADate(std::string const &str, std::string &cause)`
+
+Проверяет - является ли строка датой. 
+Вторым аргументом передается строка, которая возвращает аккумулированный список ошибок, если они случились.
+
+| includes | depends                                                    | return | links to use                                                                                                   | prev name |
+|----------|------------------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------|-----------|
+|          | isNumeric<br/>getTrimmedString<br/>getSplitStringOnRecords | bool   | [20_5_1](https://github.com/VladislavNovak/20_5_1/blob/ffa6db6840c82b32353f1714d6b7aaca3a6bcad2/main.cpp#L118) | isDate    |
+
+```c++
+bool isStringADate(std::string const &str, std::string &cause) {
+    bool isValid = true;
+    std::vector<std::vector<int>> ranges = { { 1, 31 }, { 1, 12 }, { 1950, 2030 } };
+    std::vector<std::string> parts = getSplitStringOnRecords(str, '.', false);
+
+    if (parts.size() != 3) {
+        cause += "Формат ввода: ДД.ММ.ГГГГ\n";
+        isValid = false;
+    }
+
+    for (int i = 0; i < parts.size(); ++i) {
+        std::string current = parts[i];
+
+        if (!isNumeric(current)) {
+            char warning[100];
+            sprintf(warning, "%i часть (%s) не является цифрой\n", (i + 1), current.c_str());
+            cause += warning;
+            isValid = false;
+            continue;
+        }
+
+        int part = std::stoi(current);
+        auto range = ranges[i];
+
+        if (part < range[0] || part > range[1]) {
+            char warning[100];
+            sprintf(warning, "%i часть (%i) должна быть в диапазоне %i - %i\n", (i + 1), part, range[0], range[1]);
+            cause += warning;
+            isValid = false;
+        }
+    }
+
+    return isValid;
+}
+```
+Данная функция пока узко специализирована и, несмотря на то, что выполняет задачу проверки строки, требует доработки. 
+Однако она вполне рабочая и может служить общим шаблоном для решения подобных задач.
 
 ---
 ### `bool convertDoubleFromString(std::string const &text, double &out)`
@@ -191,7 +240,7 @@ int getRandomIntInRange(int from, int to) {
 
 
 ```c++
-string getTrimmedString(std::string str, std::string const &whiteSpaces = " \r\n\t\v\f") {
+std::string getTrimmedString(std::string str, std::string const &whiteSpaces = " \r\n\t\v\f") {
     auto start = str.find_first_not_of(whiteSpaces);
     str.erase(0, start);
     auto end = str.find_last_not_of(whiteSpaces);
@@ -214,10 +263,10 @@ string getTrimmedString(std::string str, std::string const &whiteSpaces = " \r\n
 
 ```c++
 std::vector<std::string> getSplitStringOnRecords(std::string const &str, const char delim = ',', bool isEmptyDenied = true) {
-    vector<string> records;
+    std::vector<std::string> records;
     std::stringstream ss(str);
+    std::string rawRecord;
 
-    sts::string rawRecord;
     // Делим строки на токены по delim
     while (std::getline(ss, rawRecord, delim)) {
         std::string record = getTrimmedString(rawRecord);
@@ -269,7 +318,7 @@ template<typename T> T getUserInput(std::string const &restrictions = "") {
             continue;
         }
 
-        if ((restrictions.length() && isIncludes(input, restrictions)) || !restrictions.length()) break;
+        if ((restrictions.length() && isIncludes(restrictions, input)) || !restrictions.length()) break;
 
         printf(warning, input, getDelimitedString(restrictions).c_str());
 
@@ -284,7 +333,7 @@ template<typename T> T getUserInput(std::string const &restrictions = "") {
     return input;
 }
 ```
-Пример использования:
+Примеры использования:
 
 ```c++
 getUserInput<char>("1456abc"); // получаем лишь символ из строки "1456abc"
@@ -293,19 +342,19 @@ int number = (getUserInput<char>("12678") - '0') // получить число 
 getUserInput<char>(); // отработает std::cin и получим первый введенный символ char
 getUserInput<double>(); // получим любое введенное число с точкой-разделителем (вплоть до первой НЕ цифры)
 getUserInput<int>(); // получим любое введенное число (вплоть до первой НЕ цифры)
-
-if (isIncludes(getUserInput<char>("YyNn"), "Yy")) {
-    cout << "Done" << endl;
-}
 ```
-
-Пример использования:
-
 ```c++
 // Получить цифру в обозначенном диапазоне
 int getUserChoiceFromRange(const std::string &msg, std::string const &range) {
     std::cout << msg << ": ";
     return (getUserInput<char>(range) - '0');
+}
+```
+```c++
+// Возвращает true при введении Y/y или false при N/n. Другие символы запрещены
+bool hasDialogYesNo(const std::string &msg) {
+    printf("%s. Press 'Y/y' to agree or 'N/n' to deny: ", msg.c_str());
+    return isIncludes("Yy", getUserChar<char>("YyNn"));
 }
 ```
 
@@ -388,6 +437,22 @@ int getUserNumeric(const std::string &msg = "Введите цифры", int fro
         }
 
         return num;
+    }
+}
+```
+
+---
+### `void outputComplexData(std::ostream &out, vector<vector<string>> const &complexData, const string &format = " ")`
+
+Печатает данные в указанный поток. Потоком может быть std::cout, а может быть и std::ofstream file
+
+```c++
+void outputComplexData(std::ostream &out, vector<vector<string>> const &complexData, const string &format = " ") {
+    for (auto &line : complexData) {
+        for (int i = 0; i < line.size(); ++i) {
+             out << line[i] << (i != line.size() - 1 ? format : "");
+        }
+        out << std::endl;
     }
 }
 ```
