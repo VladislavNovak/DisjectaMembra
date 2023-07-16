@@ -7,7 +7,7 @@
 Сами решения основываются на актуальных на данный момент знаниях и постоянно обновляются.
 
 ---
-### `bool isIncludes(const char &item, const std::string &range)`
+### `bool isIncludes(const char &item, const string &range)`
 
 Проверяет, встречается ли item хоть раз встречается в диапазоне.
 
@@ -24,7 +24,42 @@ bool isIncludes(const std::string &range, const char &item) {
 ```
 
 ---
-### `bool isNumeric(std::string const &str)`
+### `int findIndexInVector(vector<T> const &list, const T &key)`
+
+Поиск key в vector. В случае успеха, возвращает позицию. Если ничего не найдено, возвращается -1
+
+| includes  | depends | return | use in | links to use                                                                                                   |
+|-----------|---------|--------|--------|----------------------------------------------------------------------------------------------------------------|
+| algorithm |         | int    |        | [20_5_3](https://github.com/VladislavNovak/20_5_3/blob/1362c3ece3cbcf12cd29d26cf90eb84146f75d93/main.cpp#L142) |
+
+```c++
+template<typename T>
+int findIndexInVector(std::vector<T> const &list, const T &key) {
+    const int NOT_FOUND = -1;
+    auto it = std::find_if(list.cbegin(), list.cend(), [key](const T &i){ return i == key; });
+
+    if (it != list.cend()) {
+        return (int)std::distance(list.cbegin(), it);
+    }
+
+    return NOT_FOUND;
+}
+```
+
+Пример использования:
+
+```c++
+std::vector<std::string> list = { "first", "second", "third" };
+std::string key = "third";
+
+int result = findIndexInVector(list, key);
+
+if (result != 1)
+    std::cout << result << std::endl;
+```
+
+---
+### `bool isNumeric(string const &str)`
 
 Проверяет, является ли строка целым числом
 
@@ -44,20 +79,43 @@ bool isNumeric(std::string const &str) {
 ```
 
 ---
-### `bool isStringADate(std::string const &str, std::string &cause)`
+### `bool hasFileExist(const char* path)`
+
+Проверяет существование файла
+
+| includes | depends | return | links to use                                                                                                   | prev name   |
+|----------|---------|--------|----------------------------------------------------------------------------------------------------------------|-------------|
+| fstream  |         | bool   | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L100) | isFileExist |
+
+```c++
+bool hasFileExist(const char* path) {
+    bool isFileExist = false;
+
+    std::ifstream file(path);
+
+    if (file.is_open() && !file.bad()) isFileExist = true;
+
+    file.close();
+
+    return isFileExist;
+}
+```
+
+---
+### `bool isStringADate(string const &str, string &cause)`
 
 Проверяет - является ли строка датой. 
 Вторым аргументом передается строка, которая возвращает аккумулированный список ошибок, если они случились.
 
-| includes | depends                                                    | return | links to use                                                                                                   | prev name |
-|----------|------------------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------|-----------|
-|          | isNumeric<br/>getTrimmedString<br/>getSplitStringOnRecords | bool   | [20_5_1](https://github.com/VladislavNovak/20_5_1/blob/ffa6db6840c82b32353f1714d6b7aaca3a6bcad2/main.cpp#L118) | isDate    |
+| includes | depends                                                | return | links to use                                                                                                   | prev name |
+|----------|--------------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------|-----------|
+|          | isNumeric<br/>getTrimmedString<br/>splitStringIntoList | bool   | [20_5_1](https://github.com/VladislavNovak/20_5_1/blob/ffa6db6840c82b32353f1714d6b7aaca3a6bcad2/main.cpp#L118) | isDate    |
 
 ```c++
 bool isStringADate(std::string const &str, std::string &cause) {
     bool isValid = true;
     std::vector<std::vector<int>> ranges = { { 1, 31 }, { 1, 12 }, { 1950, 2030 } };
-    std::vector<std::string> parts = getSplitStringOnRecords(str, '.', false);
+    std::vector<std::string> parts = ыplitStringIntoList(str, '.', false);
 
     if (parts.size() != 3) {
         cause += "Формат ввода: ДД.ММ.ГГГГ\n";
@@ -93,7 +151,7 @@ bool isStringADate(std::string const &str, std::string &cause) {
 Однако она вполне рабочая и может служить общим шаблоном для решения подобных задач.
 
 ---
-### `bool convertDoubleFromString(std::string const &text, double &out)`
+### `bool convertDoubleFromString(string const &text, double &out)`
 
 Преобразует строку в double. Если удалось, то возвращается true
 
@@ -116,7 +174,7 @@ bool convertDoubleFromString(string const &str, double &out) {
 Можно было бы использовать strtod(str.c_str(), nullptr), который не выбрасывает исключение.
 
 ---
-### `std::string getDelimitedString(const std::string &range)`
+### `std::string getDelimitedString(const string &range)`
 
 Добавляет в копию строки между буквами разделитель в виде запятой. 
 
@@ -200,7 +258,7 @@ int getDigitCount(int digit) {
 ```
 
 ---
-### `getRoundedIntWithStep`
+### `getRoundedIntWithStep(int val, int step = 10)`
 
 Округляет целое до заданных десятков
 
@@ -217,27 +275,96 @@ int getRoundedIntWithStep(int val, int step = 10) {
 ---
 ### `int getRandomIntInRange(int from, int to)`
 
-Получить случайное целое в диапазоне (с учётом верхней границы)
+Получить случайное целое в диапазоне (с учётом верхней границы). 
 
-| includes | depends | return | links to use                                                                                                   |
-|----------|---------|--------|----------------------------------------------------------------------------------------------------------------|
-| cstdlib  |         | int    | [16_6_5](https://github.com/VladislavNovak/16_6_5/blob/44f288cbb2a6d42ebf892922805559517f79fbb1/main.cpp#L249) |
+Для того чтобы случайное число всегда генерировалось заново, необходимо подключить ctime
+
+| includes          | depends | return | links to use                                                                                                   |
+|-------------------|---------|--------|----------------------------------------------------------------------------------------------------------------|
+| cstdlib<br/>ctime |         | int    | [16_6_5](https://github.com/VladislavNovak/16_6_5/blob/44f288cbb2a6d42ebf892922805559517f79fbb1/main.cpp#L249) |
 
 
 ```c++
+std::srand(std::time(nullptr)); // NOLINT(cert-msc51-cpp)
+
 int getRandomIntInRange(int from, int to) {
     return (from + std::rand() % (to - from + 1)); // NOLINT(cert-msc50-cpp)
 }
 ```
----
-### `string getTrimmedString(std::string str, std::string const &whiteSpaces = " \r\n\t\v\f")`
 
-Возвращает строку с удаленными конечными пробелами
+---
+### `vector<T> getShuffleVector(vector<T> const &data)`
+
+Перемешивает копию vector. Возвращает новый перемешанный вектор
+
+| includes | depends             | return   | links to use                          |
+|----------|---------------------|----------|---------------------------------------|
+|          | getRandomIntInRange | vector T | getShuffledCopyOfVectorRangeExample() |
+
+```c++
+template<typename T>
+std::vector<T> getShuffleVector(std::vector<T> const &data) {
+    std::vector<T> out = data;
+    for (int i = 0; i < out.size() - 1; ++i) {
+        int j = getRandomIntInRange(i, out.size() - 1);
+        std::swap(out[i], out[j]);
+    }
+
+    return out;
+}
+```
+
+---
+### `vector<T> getCopyVector(vector<T> const &data, int amount = 0, int firstPos = 0)`
+
+Копирует vector. Возвращает или полную копию, или, если указан размер (amount) и/или 
+позиция, с которой нужно копировать (firstPos), диапазон
+
+| includes  | depends | return   | links to use                          |
+|-----------|---------|----------|---------------------------------------|
+| algorithm |         | vector T | getShuffledCopyOfVectorRangeExample() |
+
+```c++
+template<typename T>
+std::vector<T> getCopyVector(std::vector<T> const &data, int amount = 0, int firstPos = 0) {
+    std::vector<T> out;
+
+    int sizeOfCopy = (amount == 0 )|| ((amount + firstPos) > data.size()) ? (data.size() - firstPos) : amount;
+
+    std::copy_n(data.begin() + firstPos, sizeOfCopy, std::back_inserter(out));
+
+    return out;
+}
+```
+
+---
+### `vector<T> getShuffledCopyOfVectorRange(vector<T> const &data, int amount = 0, int firstPos = 0)`
+
+Перемешивает копию vector. Возвращает диапазон перемешанного вектора. 
+Является обёрткой для getShuffleVector для получения диапазона
+
+| includes | depends                            | return   | links to use                          |
+|----------|------------------------------------|----------|---------------------------------------|
+|          | getShuffleVector<br/>getCopyVector | vector T | getShuffledCopyOfVectorRangeExample() |
+
+```c++
+template<typename T>
+std::vector<T> getShuffledCopyOfVectorRange(std::vector<T> const &data, int amount = 0, int firstPos = 0) {
+    std::vector<T> shuffledVector = getShuffleVector(data);
+
+    return getCopyVector(shuffledVector, amount, firstPos);
+}
+
+```
+
+---
+### `string getTrimmedString(string str, string const &whiteSpaces = " \r\n\t\v\f")`
+
+Обрезает строку. Возвращает строку с удаленными конечными пробелами
 
 | includes | depends | return | links to use                                                                                                          |
 |----------|---------|--------|-----------------------------------------------------------------------------------------------------------------------|
 |          |         | string | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/89adfe880b2d931009953b4e03bd19e6181bd05f/main.cpp#L14C2-L14C2) |
-
 
 ```c++
 std::string getTrimmedString(std::string str, std::string const &whiteSpaces = " \r\n\t\v\f") {
@@ -251,18 +378,17 @@ std::string getTrimmedString(std::string str, std::string const &whiteSpaces = "
 ```
 
 ---
-### `vector<string> getSplitStringOnRecords(string const &str, const char delim = ',', bool isEmptyDenied = true)`
+### `vector<string> splitStringIntoList(string const &str, const char delim = ',', bool isEmptyDenied = true)`
 
 Разбивает строку на подстроки. Если isEmptyDenied == false, то можно вернуть пустой вектор
 
-
-| includes | depends          | return            | use in         | links to use                                                                                                  |
-|----------|------------------|-------------------|----------------|---------------------------------------------------------------------------------------------------------------|
-| sstream  | getTrimmedString | vector of strings | getUserNumeric | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L25) |
+| includes | depends          | return            | use in         | links to use                                                                                                  | prev name               |
+|----------|------------------|-------------------|----------------|---------------------------------------------------------------------------------------------------------------|-------------------------|
+| sstream  | getTrimmedString | vector of strings | getUserNumeric | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L25) | getSplitStringOnRecords |
 
 
 ```c++
-std::vector<std::string> getSplitStringOnRecords(std::string const &str, const char delim = ',', bool isEmptyDenied = true) {
+std::vector<std::string> splitStringIntoList(std::string const &str, const char delim = ',', bool isEmptyDenied = true) {
     std::vector<std::string> records;
     std::stringstream ss(str);
     std::string rawRecord;
@@ -281,7 +407,7 @@ std::vector<std::string> getSplitStringOnRecords(std::string const &str, const c
 ```
 
 ---
-### `template<typename T> T getUserInput(std::string const &restrictions = "")`
+### `template<typename T> T getUserInput(string const &restrictions = "")`
 
 Пользовательский ввод. Позволяет работать в двух режимах: без переданной строки restrictions и со строкой restrictions. 
 
@@ -394,10 +520,10 @@ std::string getUserLineString(const std::string &msg) {
 ```c++
 std::string msg1 = "Введете слово";
 // получить введенные пользователем слова и вычленить лишь первое
-string userInput = getSplitStringOnRecords(getUserLineString(msg1), ' ')[0];
+string userInput = splitStringIntoList(getUserLineString(msg1), ' ')[0];
 std::string msg2 = "Перечислите слова через запятую";
 // Получить введенный пользователем список в виде вектора
-std::vector<std::string> userInputList = getSplitStringOnRecords(getUserLineString(msg2), ',');
+std::vector<std::string> userInputList = splitStringIntoList(getUserLineString(msg2), ',');
 ```
 
 ---
@@ -411,10 +537,9 @@ std::vector<std::string> userInputList = getSplitStringOnRecords(getUserLineStri
 - `getUserLineString` (основано на std::getline и позволяет получить строку любой длины),
 - `getUserNumeric` (получение числа в диапазоне)
 
-| includes | depends                                       | return | links to use                                                                                                  |
-|----------|-----------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------|
-|          | getSplitStringOnRecords<br/>getUserLineString | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) |
-
+| includes | depends                                   | return | links to use                                                                                                  |
+|----------|-------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------|
+|          | splitStringIntoList<br/>getUserLineString | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) |
 
 ```c++
 int getUserNumeric(const std::string &msg = "Введите цифры", int from = 0, int to = 0) {
@@ -422,7 +547,7 @@ int getUserNumeric(const std::string &msg = "Введите цифры", int fro
     bool isRange = (from != to);
 
     while (true) {
-        std::string userInput = getSplitStringOnRecords(getUserLineString(msg), ' ')[0];
+        std::string userInput = splitStringIntoList(getUserLineString(msg), ' ')[0];
 
         if (!isNumeric(userInput)) {
             printf("%s\n", warning.c_str());
@@ -442,12 +567,28 @@ int getUserNumeric(const std::string &msg = "Введите цифры", int fro
 ```
 
 ---
-### `void outputComplexData(std::ostream &out, vector<vector<string>> const &complexData, const string &format = " ")`
+### `void outputListToStream(std::ostream &out, vector<vector<string>> const &list, const string &delim = ",", bool isNumbering = false)`
 
-Печатает данные в указанный поток. Потоком может быть std::cout, а может быть и std::ofstream file
+Печатает данные в указанный поток. Потоком может быть std::cout, а может быть и std::ofstream file. 
+Таким образом, данные можно или вывести на экран, или распечатать в файл. Важно лишь, чтобы данные были массивом строк.
+
+| includes | depends | return | links to use           | prev name                                        |
+|----------|---------|--------|------------------------|--------------------------------------------------|
+| iostream |         |        | writeReadFileExample() | outputComplexData<br/>displayComplexDataToScreen |
 
 ```c++
-void outputComplexData(std::ostream &out, vector<vector<string>> const &complexData, const string &format = " ") {
+void outputListToStream(std::ostream &out, std::vector<std::string> const &list, const std::string &delim = ",", bool isNumbering = false) {
+    for (int i = 0; i < list.size(); ++i)
+        out << (isNumbering ? std::to_string(i) + ": " + list[i] : list[i]) << (i != list.size() - 1 ? delim : "");
+
+    out << std::endl;
+}
+```
+
+Примеры использования (функция модифицирована под вывод вектора векторов в файл):
+
+```c++
+void outputComplexToStream(std::ostream &out, vector<vector<string>> const &complexData, const string &format = ",") {
     for (auto &line : complexData) {
         for (int i = 0; i < line.size(); ++i) {
              out << line[i] << (i != line.size() - 1 ? format : "");
@@ -456,5 +597,160 @@ void outputComplexData(std::ostream &out, vector<vector<string>> const &complexD
     }
 }
 ```
+
+---
+### `writeListToFile(const char* path, vector<string> const &list, bool isAppMode = true, const std::string &delim = ",")`
+
+Запись в файл. Печатает вектор в файл
+
+| includes | depends            | return | links to use           | prev name              |
+|----------|--------------------|--------|------------------------|------------------------|
+| fstream  | outputListToStream |        | writeReadFileExample() | writeComplexDataToFile |
+
+```c++
+void writeListToFile(const char* path, std::vector<std::string> const &list, bool isAppMode = true, const std::string &delim = ",") {
+    std::ofstream file(path, (isAppMode ? std::ios::app : std::ios::out));
+    outputListToStream(file, list, delim);
+    file.close();
+}
+```
+
+---
+### `void printList(vector<string> const &list, const string &msg = "", const string &delim = ",", bool isNumbering = false)`
+
+Выводит данные на экран. Обычная печать простого вектора
+
+| includes | depends            | return | links to use           | prev name                  |
+|----------|--------------------|--------|------------------------|----------------------------|
+|          | outputListToStream |        | writeReadFileExample() | displayComplexDataToScreen |
+
+```c++
+void printList(std::vector<std::string> const &list, const std::string &msg = "", const std::string &delim = ",", bool isNumbering = false) {
+    if (msg.length())
+        std::cout << msg << ": " << std::endl;
+
+    outputListToStream(std::cout, list, delim, isNumbering);
+}
+```
+
+---
+### `bool readFileToList(const char* pathName, vector<string> &list)`
+
+Чтение файла. Записывает файл в вектор. В случае успешного прочтения возвращает true
+
+| includes | depends | return | links to use           | prev name        |
+|----------|---------|--------|------------------------|------------------|
+| fstream  |         |        | writeReadFileExample() | readFileToVector |
+
+```c++
+bool readFileToList(const char* pathName, std::vector<std::string> &list) {
+    bool isReadSuccessfully = false;
+    std::ifstream in(pathName);
+
+    if (in.is_open() && !in.bad()) {
+        std::string textLine;
+
+        while (std::getline(in, textLine)) list.push_back(textLine);
+
+        isReadSuccessfully = true;
+    }
+
+    in.close();
+
+    return isReadSuccessfully;
+}
+```
+
+---
+### `void displayFileToScreen(const char* pathName, string const &msg)`
+
+Чтение файла. Записывает данные из файла в вектор и сразу печатает их на экран.
+
+| includes | depends                      | return | links to use           |
+|----------|------------------------------|--------|------------------------|
+|          | readFileToList<br/>printList |        | writeReadFileExample() |
+
+```c++
+void displayFileToScreen(const char* pathName, std::string const &msg) {
+    std::vector<std::string> data;
+    bool isReadFileSuccessfully = readFileToList(pathName, data);
+
+    if (!isReadFileSuccessfully) {
+        printf("%s не обнаружен. Он должен находиться в директории с исполняемым файлом!\n", pathName);
+        return;
+    }
+
+    system("cls");
+
+    if (!data.empty()) {
+        printList(data, msg, ", ");
+    } else {
+        std::cout << "Данных пока нет" << std::endl;
+    }
+}
+```
+
+---
+### `bool readFromBinaryFile(const char* fileName, string &data)`
+
+Чтение из двоичного (бинарного) файла в строку. Возвращает true, если чтение прошло успешно
+
+| includes | depends | return | links to use                                                                                                   |
+|----------|---------|--------|----------------------------------------------------------------------------------------------------------------|
+| fstream  |         |        | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L112) |
+
+```c++
+bool readFromBinaryFile(const char* fileName, std::string &data) {
+    std::ifstream fileReader(fileName, std::ios::binary);
+
+    if (!hasFileExist(fileName)) {
+        fileReader.close();
+        return false;
+    }
+
+    fileReader.seekg(0, std::ifstream::end);
+
+    int bufferSize = (int)fileReader.tellg();
+    char* buffer = new char[bufferSize + 1];
+    buffer[bufferSize] = '\0';
+
+    fileReader.seekg(0, std::ifstream::beg);
+
+    fileReader.read(buffer, bufferSize);
+
+    data += buffer;
+    delete[] buffer;
+
+    fileReader.close();
+
+    return true;
+}
+```
+
+---
+### `void writeToBinaryFile(const char* path, const string &data, bool isAppMode = false, const char delim = ';')`
+
+Запись в двоичный (бинарный) файл из строки
+
+| includes | depends | return | links to use                                                                                                            |
+|----------|---------|--------|-------------------------------------------------------------------------------------------------------------------------|
+| fstream  |         |        | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L138C1-L138C1) |
+
+```c++
+void writeToBinaryFile(const char* path, const std::string &data, bool isAppMode = false, const char delim = ';') {
+    std::ofstream file(path, std::ios::binary | (isAppMode ? std::ios::app : std::ios::out));
+
+    if (isAppMode) file << delim;
+
+    file.write(data.c_str(), strlen(data.c_str())); // NOLINT(cppcoreguidelines-narrowing-conversions)
+
+    file.close();
+}
+```
+
+
+
+
+
 
 
