@@ -24,6 +24,23 @@ bool isIncludes(const std::string &range, const char &item) {
 ```
 
 ---
+### `bool hasSubstr(const char *origin, const char *substr)`
+
+Проверяет строку на вхождение подстроки
+
+| includes | depends | return | use in | links to use                                                                                                        |
+|----------|---------|--------|--------|---------------------------------------------------------------------------------------------------------------------|
+| cstring  |         | bool   |        | [17_4_3](https://github.com/VladislavNovak/17_4_3/blob/cb3945debec06f908c99caea271d56654937b5ef/main.cpp#L4C1-L4C1) |
+
+```c++
+bool hasSubstr(const char *origin, const char *substr) {
+    char *found = strstr(origin, substr);
+
+    return found != nullptr;
+}
+```
+
+---
 ### `int findIndexInVector(vector<T> const &list, const T &key)`
 
 Поиск key в vector. В случае успеха, возвращает позицию. Если ничего не найдено, возвращается -1
@@ -238,7 +255,7 @@ std::string getRemoveDotsString(const string &str) {
 ```
 
 ---
-### `int getDigitCount(int digit)`
+### `int getNumberOfDigit(int digit)`
 
 Получаем количество разрядов в int
 
@@ -247,7 +264,7 @@ std::string getRemoveDotsString(const string &str) {
 |          |         | int    | [16_6_2](https://github.com/VladislavNovak/16_6_2/blob/44332ad078311bd91ffc5f6114939ae80ba5916a/main.cpp#L24) | digitCount |
 
 ```c++
-int getDigitCount(int digit) {
+int getNumberOfDigit(int digit) {
     int count = 0;
     while (digit != 0) {
         digit /= 10;
@@ -258,7 +275,7 @@ int getDigitCount(int digit) {
 ```
 
 ---
-### `getRoundedIntWithStep(int val, int step = 10)`
+### `int getRoundedIntWithStep(int val, int step = 10)`
 
 Округляет целое до заданных десятков
 
@@ -269,6 +286,26 @@ int getDigitCount(int digit) {
 ```c++
 int getRoundedIntWithStep(int val, int step = 10) {
     return (val + step / 2) / step * step;
+}
+```
+
+---
+### `template<size_t T> void flipArray (int (&arr)[T])`
+
+Перевернуть (на месте) массив типа int arr[] = { 0, 1, 2 };
+
+| includes | depends | return | links to use                                                                                                          |
+|----------|---------|--------|-----------------------------------------------------------------------------------------------------------------------|
+|          |         |        | [17_4_2](https://github.com/VladislavNovak/17_4_2/blob/cf6327d3eceeab66a27265e0c85dfaea32b4d85d/main.cpp#L16C1-L16C1) |
+
+```c++
+template<size_t T>
+void flipArray (int (&arr)[T]) {
+    for (size_t i{}; i < T / 2; ++i) {
+        int temp = *(arr + i);
+        *(arr + i) = *(arr + T - i - 1);
+        *(arr + T - i - 1) = temp;
+    }
 }
 ```
 
@@ -732,9 +769,9 @@ bool readFromBinaryFile(const char* fileName, std::string &data) {
 
 Запись в двоичный (бинарный) файл из строки
 
-| includes | depends | return | links to use                                                                                                            |
-|----------|---------|--------|-------------------------------------------------------------------------------------------------------------------------|
-| fstream  |         |        | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L138C1-L138C1) |
+| includes            | depends | return | links to use                                                                                                            |
+|---------------------|---------|--------|-------------------------------------------------------------------------------------------------------------------------|
+| fstream<br/>cstring |         |        | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L138C1-L138C1) |
 
 ```c++
 void writeToBinaryFile(const char* path, const std::string &data, bool isAppMode = false, const char delim = ';') {
