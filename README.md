@@ -829,36 +829,71 @@ void saveStringToBinaryFile(const char* path,
 ```
 
 ---
-### `bool loadPersonFromBinaryFile(const char* path, character &person)`
+### `template<typename T> bool loadIntoArrFromBinaryFile(const char* path, vector<T> &arr)`
 
-Функция выступает как шаблон для записи в уже известную структуру данных их бинарного (двоичного) файла. 
-Важно, чтобы в файл ранее была уже записана симметричная структура функцией, например, `savePersonToBinaryFile()`. 
+Читает из бинарного (двоичного) файла данные для массива структур.
 
-| includes | depends                                 | return | links to use |
-|----------|-----------------------------------------|--------|--------------|
-| fstream  | hasFileExist<br/>savePersonToBinaryFile | bool   |              |
+| includes | depends                      | return | links to use |
+|----------|------------------------------|--------|--------------|
+| fstream  | readIntoPersonFromBinaryFile | bool   |              |
 
 ```c++
-bool loadPersonFromBinaryFile(const char* path, character &person) {
-    bool isReadSuccessfully = false;
+template<typename T>
+bool loadIntoArrFromBinaryFile(const char* path, vector<T> &arr) {
     std::ifstream fileReader(path, std::ios::binary);
+    bool isFileFound = (fileReader.is_open() && !fileReader.bad());
 
-    if (hasFileExist(path)) {
-        int bufferSize;
-        fileReader.read((char*) &bufferSize, sizeof(int));
-        person.name.resize(bufferSize);
-        fileReader.read((char*) person.name.c_str(), bufferSize);
-        fileReader.read((char*) &person.health, sizeof(int));
+    if (isFileFound) {
+        while(!fileReader.eof()) {
+            T item;
+            bool isItemReadSuccessfully = readIntoPersonFromBinaryFile(fileReader, item);
 
-        isReadSuccessfully = true;
+            if (isItemReadSuccessfully)
+                arr.push_back(item);
+        }
     }
 
     fileReader.close();
 
-    return isReadSuccessfully;
+    return isFileFound;
 }
 ```
 
+В `readIntoPersonFromBinaryFile()` необходимо подставить актуальную структуру с внесенными изменениями
+
+---
+### `bool readIntoPersonFromBinaryFile(std::ifstream &fileReader, character &person)`
+
+Читает из бинарного (двоичного) файла в структуру.
+
+Функция выступает лишь как пример, шаблон.
+
+| includes | depends                | return | links to use |
+|----------|------------------------|--------|--------------|
+| fstream  | savePersonToBinaryFile | bool   |              |
+
+```c++
+bool readIntoPersonFromBinaryFile(std::ifstream &fileReader, character &person) {
+    bool isItemReadSuccessfully = false;
+    int bufferSize;
+
+    // Читаем первую сущность. Это - размер для person.name
+    fileReader.read((char*) &bufferSize, sizeof(int));
+    // Если она существует в принципе, то продолжаем чтение
+    if (!fileReader.eof()) {
+        person.name.resize(bufferSize);
+        fileReader.read((char*) person.name.c_str(), bufferSize);
+        fileReader.read((char*) &person.salary, sizeof(int));
+
+        isItemReadSuccessfully = true;
+    }
+
+    return isItemReadSuccessfully;
+}
+```
+
+Структура данных должна быть заранее известна. 
+Вероятнее всего ранее она должна была быть записана в файл методом `savePersonToBinaryFile()` 
 В конкретном случае структура должна быть такой:
 
 ```c++
@@ -868,27 +903,32 @@ struct character { string name; int health; };
 ---
 ### `void savePersonToBinaryFile(const char* path, character const &person)`
 
-Функция выступает в качестве шаблона. Она записывает структуру в двоичный (бинарный) файл. 
-Прочесть данные из такого файла возможно используя, например, `loadPersonFromBinaryFile()`
+Записывает в бинарный (двоичный) файл структуру.
 
-| includes | depends                                   | return | links to use |
-|----------|-------------------------------------------|--------|--------------|
-| fstream  | hasFileExist<br/>loadPersonFromBinaryFile |        |              |
+| includes | depends                   | return | links to use |
+|----------|---------------------------|--------|--------------|
+| fstream  | loadIntoArrFromBinaryFile |        |              |
 
 ```c++
-void savePersonToBinaryFile(const char* path, character const &person) {
-    std::ofstream file(path, std::ios::binary);
+void savePersonToBinaryFile(const char* path, character const &person, bool isAppMode = false) {
+    std::ofstream file(path, std::ios::binary | (isAppMode ? std::ios::app : std::ios::out));
 
-    int bufferSize = person.name.length();
-    file.write((char*) &bufferSize, sizeof(bufferSize));
-    file.write(person.name.c_str(), bufferSize);
-    file.write((char*) &person.health, sizeof(person.health));
+    int nameSize = (int)person.name.length();
+    file.write((char*) &nameSize, sizeof(nameSize));
+    file.write(person.name.c_str(), nameSize);
+    file.write((char*) &person.salary, sizeof(person.salary));
 
     file.close();
 }
-
 ```
 
+Структура данных должна быть заранее известна.
+Вероятнее всего позднее она должна быть прочитана из файла методом `loadIntoArrFromBinaryFile()`
+В конкретном случае структура должна быть такой:
+
+```c++
+struct character { string name; int salary; };
+```
 
 
 
