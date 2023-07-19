@@ -728,23 +728,39 @@ void displayFileToScreen(const char* pathName, std::string const &msg) {
 ```
 
 ---
-### `bool readFromBinaryFile(const char* fileName, string &data)`
+### `bool loadStringFromBinaryFile(const char* fileName, string &str)`
 
 Чтение из двоичного (бинарного) файла в строку. Возвращает true, если чтение прошло успешно
 
-| includes | depends | return | links to use                                                                                                   |
-|----------|---------|--------|----------------------------------------------------------------------------------------------------------------|
-| fstream  |         |        | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L112) |
+| includes | depends      | return | links to use                                                                                                   | past name          |
+|----------|--------------|--------|----------------------------------------------------------------------------------------------------------------|--------------------|
+| fstream  | hasFileExist | bool   | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L112) | readFromBinaryFile |
 
 ```c++
-bool readFromBinaryFile(const char* fileName, std::string &data) {
-    std::ifstream fileReader(fileName, std::ios::binary);
+bool loadStringFromBinaryFile(const char* path, std::string &str) {
+    bool isReadSuccessfully = false;
+    std::ifstream fileReader(path, std::ios::binary);
 
-    if (!hasFileExist(fileName)) {
-        fileReader.close();
-        return false;
+    if (hasFileExist(path)) {
+        fileReader.seekg(0, std::ifstream::end);
+        int bufferSize = (int)fileReader.tellg();
+        str.resize(bufferSize);
+        fileReader.seekg(0, std::ifstream::beg);
+
+        fileReader.read((char*) str.c_str(), bufferSize);
+
+        isReadSuccessfully = true;
     }
 
+    fileReader.close();
+
+    return isReadSuccessfully;
+}
+```
+
+Примечание: создать буфер возможно посредством массива char:
+
+```c++
     fileReader.seekg(0, std::ifstream::end);
 
     int bufferSize = (int)fileReader.tellg();
@@ -757,32 +773,92 @@ bool readFromBinaryFile(const char* fileName, std::string &data) {
 
     data += buffer;
     delete[] buffer;
+```
 
-    fileReader.close();
+---
+### `void saveStringToBinaryFile(const char* path, const string &str, bool isAppMode = false, const char delim = ';')`
 
-    return true;
+Запись в двоичный (бинарный) файл из строки
+
+| includes | depends      | return | links to use                                                                                                            | past name         |
+|----------|--------------|--------|-------------------------------------------------------------------------------------------------------------------------|-------------------|
+| fstream  | hasFileExist |        | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L138C1-L138C1) | writeToBinaryFile |
+
+```c++
+void saveStringToBinaryFile(const char* path,
+                            std::string const &str,
+                            bool isAppMode = false,
+                            const char delim = ';') {    
+    std::ofstream file(path, std::ios::binary | (isAppMode ? std::ios::app : std::ios::out));
+
+    if (hasFileExist(path) && isAppMode)
+        file.write((char*) &delim, sizeof(delim));
+
+    file.write(str.c_str(), str.length());
+    
+    file.close();
 }
 ```
 
 ---
-### `void writeToBinaryFile(const char* path, const string &data, bool isAppMode = false, const char delim = ';')`
+### `bool loadPersonFromBinaryFile(const char* path, character &person)`
 
-Запись в двоичный (бинарный) файл из строки
+Функция выступает как шаблон для записи в уже известную структуру данных их бинарного (двоичного) файла. 
+Важно, чтобы в файл ранее была уже записана симметричная структура функцией, например, `savePersonToBinaryFile()`. 
 
-| includes            | depends | return | links to use                                                                                                            |
-|---------------------|---------|--------|-------------------------------------------------------------------------------------------------------------------------|
-| fstream<br/>cstring |         |        | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L138C1-L138C1) |
+| includes | depends                                 | return | links to use |
+|----------|-----------------------------------------|--------|--------------|
+| fstream  | hasFileExist<br/>savePersonToBinaryFile | bool   |              |
 
 ```c++
-void writeToBinaryFile(const char* path, const std::string &data, bool isAppMode = false, const char delim = ';') {
-    std::ofstream file(path, std::ios::binary | (isAppMode ? std::ios::app : std::ios::out));
+bool loadPersonFromBinaryFile(const char* path, character &person) {
+    bool isReadSuccessfully = false;
+    std::ifstream fileReader(path, std::ios::binary);
 
-    if (isAppMode) file << delim;
+    if (hasFileExist(path)) {
+        int bufferSize;
+        fileReader.read((char*) &bufferSize, sizeof(int));
+        person.name.resize(bufferSize);
+        fileReader.read((char*) person.name.c_str(), bufferSize);
+        fileReader.read((char*) &person.health, sizeof(int));
 
-    file.write(data.c_str(), strlen(data.c_str())); // NOLINT(cppcoreguidelines-narrowing-conversions)
+        isReadSuccessfully = true;
+    }
+
+    fileReader.close();
+
+    return isReadSuccessfully;
+}
+```
+
+В конкретном случае структура должна быть такой:
+
+```c++
+struct character { string name; int health; };
+```
+
+---
+### `void savePersonToBinaryFile(const char* path, character const &person)`
+
+Функция выступает в качестве шаблона. Она записывает структуру в двоичный (бинарный) файл. 
+Прочесть данные из такого файла возможно используя, например, `loadPersonFromBinaryFile()`
+
+| includes | depends                                   | return | links to use |
+|----------|-------------------------------------------|--------|--------------|
+| fstream  | hasFileExist<br/>loadPersonFromBinaryFile |        |              |
+
+```c++
+void savePersonToBinaryFile(const char* path, character const &person) {
+    std::ofstream file(path, std::ios::binary);
+
+    int bufferSize = person.name.length();
+    file.write((char*) &bufferSize, sizeof(bufferSize));
+    file.write(person.name.c_str(), bufferSize);
+    file.write((char*) &person.health, sizeof(person.health));
 
     file.close();
 }
+
 ```
 
 
