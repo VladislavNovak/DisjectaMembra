@@ -1,10 +1,38 @@
 # <font color="Tomato">Pragmata</font>
 
-#### <font color="Orange">Intro</font>
-
-Данные представляют собой попытку систематизации приобретенных знаний и
-представляют собой сборник готовых решений и рекомендаций.
-Сами решения основываются на актуальных на данный момент знаниях и постоянно обновляются.
+<!-- TOC -->
+* [<font color="Tomato">Pragmata</font>](#font-colortomatopragmatafont)
+    * [`bool isIncludes(const char &item, const string &range)`](#bool-isincludesconst-char-item-const-string-range)
+    * [`bool hasSubstr(const char *origin, const char *substr)`](#bool-hassubstrconst-char-origin-const-char-substr)
+    * [`int findIndexInVector(vector<T> const &list, const T &key)`](#int-findindexinvectorvectort-const-list-const-t-key)
+    * [`bool isNumeric(string const &str)`](#bool-isnumericstring-const-str)
+    * [`bool hasFileExist(const char* path)`](#bool-hasfileexistconst-char-path)
+    * [`bool isStringADate(string const &str, string &cause)`](#bool-isstringadatestring-const-str-string-cause)
+    * [`bool convertDoubleFromString(string const &text, double &out)`](#bool-convertdoublefromstringstring-const-text-double-out)
+    * [`std::string getDelimitedString(const string &range)`](#stdstring-getdelimitedstringconst-string-range)
+    * [`void removeSymbolFromString(string &readjust, char const symbol, int leave = 0)`](#void-removesymbolfromstringstring-readjust-char-const-symbol-int-leave--0)
+    * [`int getNumberOfDigit(int digit)`](#int-getnumberofdigitint-digit)
+    * [`int getRoundedIntWithStep(int val, int step = 10)`](#int-getroundedintwithstepint-val-int-step--10)
+    * [`template<size_t T> void flipArray (int (&arr)[T])`](#templatesizet-t-void-fliparray-int-arrt)
+    * [`int getRandomIntInRange(int from, int to)`](#int-getrandomintinrangeint-from-int-to)
+    * [`vector<T> getShuffleVector(vector<T> const &data)`](#vectort-getshufflevectorvectort-const-data)
+    * [`vector<T> getCopyVector(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getcopyvectorvectort-const-data-int-amount--0-int-firstpos--0)
+    * [`vector<T> getShuffledCopyOfVectorRange(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getshuffledcopyofvectorrangevectort-const-data-int-amount--0-int-firstpos--0)
+    * [`string getTrimmedString(string str, string const &whiteSpaces = " \r\n\t\v\f")`](#string-gettrimmedstringstring-str-string-const-whitespaces---rntvf)
+    * [`vector<string> splitStringIntoList(string const &str, const char delim = ',', bool isEmptyDenied = true)`](#vectorstring-splitstringintoliststring-const-str-const-char-delim---bool-isemptydenied--true)
+    * [`template<typename T> T getUserInput(string const &restrictions = "")`](#templatetypename-t-t-getuserinputstring-const-restrictions--)
+    * [`std::string getUserLineString(const string &msg)`](#stdstring-getuserlinestringconst-string-msg)
+    * [`int getUserNumeric(const string &msg = "Введите цифры", int from = 0, int to = 0)`](#int-getusernumericconst-string-msg--введите-цифры-int-from--0-int-to--0)
+    * [`void outputListToStream(std::ostream &out, vector<vector<string>> const &list, const string &delim = ",", bool isNumbering = false)`](#void-outputlisttostreamstdostream-out-vectorvectorstring-const-list-const-string-delim---bool-isnumbering--false)
+    * [`writeListToFile(const char* path, vector<string> const &list, bool isAppMode = true, const std::string &delim = ",")`](#writelisttofileconst-char-path-vectorstring-const-list-bool-isappmode--true-const-stdstring-delim--)
+    * [`void printList(vector<string> const &list, const string &msg = "", const string &delim = ",", bool isNumbering = false)`](#void-printlistvectorstring-const-list-const-string-msg---const-string-delim---bool-isnumbering--false)
+    * [`bool readFileToList(const char* pathName, vector<string> &list)`](#bool-readfiletolistconst-char-pathname-vectorstring-list)
+    * [`void displayFileToScreen(const char* pathName, string const &msg)`](#void-displayfiletoscreenconst-char-pathname-string-const-msg)
+    * [`bool loadStringFromBinaryFile(const char* fileName, string &str)`](#bool-loadstringfrombinaryfileconst-char-filename-string-str)
+    * [`void saveStringToBinaryFile(const char* path, const string &str, bool isAppMode = false, const char delim = ';')`](#void-savestringtobinaryfileconst-char-path-const-string-str-bool-isappmode--false-const-char-delim--)
+    * [`bool loadPersonFromBinaryFile(const char* path, character &person)`](#bool-loadpersonfrombinaryfileconst-char-path-character-person)
+    * [`void savePersonToBinaryFile(const char* path, character const &person)`](#void-savepersontobinaryfileconst-char-path-character-const-person)
+<!-- TOC -->
 
 ---
 ### `bool isIncludes(const char &item, const string &range)`
