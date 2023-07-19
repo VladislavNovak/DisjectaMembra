@@ -30,7 +30,8 @@
     * [`void displayFileToScreen(const char* pathName, string const &msg)`](#void-displayfiletoscreenconst-char-pathname-string-const-msg)
     * [`bool loadStringFromBinaryFile(const char* fileName, string &str)`](#bool-loadstringfrombinaryfileconst-char-filename-string-str)
     * [`void saveStringToBinaryFile(const char* path, const string &str, bool isAppMode = false, const char delim = ';')`](#void-savestringtobinaryfileconst-char-path-const-string-str-bool-isappmode--false-const-char-delim--)
-    * [`bool loadPersonFromBinaryFile(const char* path, character &person)`](#bool-loadpersonfrombinaryfileconst-char-path-character-person)
+    * [`template<typename T> bool loadIntoArrFromBinaryFile(const char* path, vector<T> &arr)`](#templatetypename-t-bool-loadintoarrfrombinaryfileconst-char-path-vectort-arr)
+    * [`bool readIntoPersonFromBinaryFile(std::ifstream &fileReader, character &person)`](#bool-readintopersonfrombinaryfilestdifstream-filereader-character-person)
     * [`void savePersonToBinaryFile(const char* path, character const &person)`](#void-savepersontobinaryfileconst-char-path-character-const-person)
 <!-- TOC -->
 
