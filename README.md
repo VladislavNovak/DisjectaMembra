@@ -6,6 +6,7 @@
     * [`bool hasSubstr(const char *origin, const char *substr)`](#bool-hassubstrconst-char-origin-const-char-substr)
     * [`int findIndexInVector(vector<T> const &list, const T &key)`](#int-findindexinvectorvectort-const-list-const-t-key)
     * [`bool isNumeric(string const &str)`](#bool-isnumericstring-const-str)
+    * [`bool isContainsOnlyLetters(std::string const &str)`](#bool-iscontainsonlylettersstdstring-const-str)
     * [`bool hasFileExist(const char* path)`](#bool-hasfileexistconst-char-path)
     * [`bool isStringADate(string const &str, string &cause)`](#bool-isstringadatestring-const-str-string-cause)
     * [`bool convertDoubleFromString(string const &text, double &out)`](#bool-convertdoublefromstringstring-const-text-double-out)
@@ -19,7 +20,7 @@
     * [`vector<T> getCopyVector(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getcopyvectorvectort-const-data-int-amount--0-int-firstpos--0)
     * [`vector<T> getShuffledCopyOfVectorRange(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getshuffledcopyofvectorrangevectort-const-data-int-amount--0-int-firstpos--0)
     * [`string getTrimmedString(string str, string const &whiteSpaces = " \r\n\t\v\f")`](#string-gettrimmedstringstring-str-string-const-whitespaces---rntvf)
-    * [`vector<string> splitStringIntoList(string const &str, const char delim = ',', bool isEmptyDenied = true)`](#vectorstring-splitstringintoliststring-const-str-const-char-delim---bool-isemptydenied--true)
+    * [`vector<string> splitStringIntoList(string const &str, const char delim = ',', bool isEmptyRemove = true)`](#vectorstring-splitstringintoliststring-const-str-const-char-delim---bool-isemptyremove--true)
     * [`template<typename T> T getUserInput(string const &restrictions = "")`](#templatetypename-t-t-getuserinputstring-const-restrictions--)
     * [`std::string getUserLineString(const string &msg)`](#stdstring-getuserlinestringconst-string-msg)
     * [`int getUserNumeric(const string &msg = "Введите цифры", int from = 0, int to = 0)`](#int-getusernumericconst-string-msg--введите-цифры-int-from--0-int-to--0)
@@ -115,12 +116,26 @@ if (result != 1)
 
 ```c++
 bool isNumeric(std::string const &str) {
-    auto it = std::find_if(
-            str.begin(),
-            str.end(),
-            [](char const &c) { return !std::isdigit(c); });
+    auto it = std::find_if(str.begin(), str.end(), [](const char &c) { return !std::isdigit(c); });
 
-    return !str.empty() && it == str.end();
+    return (!str.empty() && it == str.end());
+}
+```
+
+---
+### `bool isContainsOnlyLetters(std::string const &str)`
+
+Проверяет, содержит ли строка лишь буквы
+
+| includes  | depends | return | links to use                                                                                                  |
+|-----------|---------|--------|---------------------------------------------------------------------------------------------------------------|
+| algorithm |         | bool   | [21_5_1](https://github.com/VladislavNovak/21_5_1/blob/317e26448bf863dc4ce89204c500e0ae82b718d4/main.cpp#L28) |
+
+```c++
+bool isContainsOnlyLetters(std::string const &str) {
+    auto it = std::find_if(str.begin(), str.end(), [](const char &c) { return !std::isalpha(c); });
+
+    return it == str.end();
 }
 ```
 
@@ -161,7 +176,7 @@ bool hasFileExist(const char* path) {
 bool isStringADate(std::string const &str, std::string &cause) {
     bool isValid = true;
     std::vector<std::vector<int>> ranges = { { 1, 31 }, { 1, 12 }, { 1950, 2030 } };
-    std::vector<std::string> parts = ыplitStringIntoList(str, '.', false);
+    std::vector<std::string> parts = splitStringIntoList(str, '.', false);
 
     if (parts.size() != 3) {
         cause += "Формат ввода: ДД.ММ.ГГГГ\n";
@@ -444,9 +459,9 @@ std::string getTrimmedString(std::string str, std::string const &whiteSpaces = "
 ```
 
 ---
-### `vector<string> splitStringIntoList(string const &str, const char delim = ',', bool isEmptyDenied = true)`
+### `vector<string> splitStringIntoList(string const &str, const char delim = ',', bool isEmptyRemove = true)`
 
-Разбивает строку на подстроки. Если isEmptyDenied == false, то можно вернуть пустой вектор
+Разбивает строку на подстроки. Если isEmptyRemove == false, то можно вернуть пустой вектор
 
 | includes | depends          | return            | use in         | links to use                                                                                                  | prev name               |
 |----------|------------------|-------------------|----------------|---------------------------------------------------------------------------------------------------------------|-------------------------|
@@ -454,8 +469,8 @@ std::string getTrimmedString(std::string str, std::string const &whiteSpaces = "
 
 
 ```c++
-std::vector<std::string> splitStringIntoList(std::string const &str, const char delim = ',', bool isEmptyDenied = true) {
-    std::vector<std::string> records;
+std::vector<std::string> splitStringIntoList(std::string const &str, const char delim = ',', bool isEmptyRemove = true) {
+    std::vector<std::string> list;
     std::stringstream ss(str);
     std::string rawRecord;
 
@@ -463,13 +478,23 @@ std::vector<std::string> splitStringIntoList(std::string const &str, const char 
     while (std::getline(ss, rawRecord, delim)) {
         std::string record = getTrimmedString(rawRecord);
         // Не позволяет добавлять пустой элемент
-        if (record.empty() && isEmptyDenied) continue;
+        if (record.empty() && isEmptyRemove) continue;
 
-        records.push_back(record);
+        list.push_back(record);
     }
 
-    return records;
+    return list;
 }
+```
+
+Пример использования:
+
+```c++
+// получить первое слово
+std::string getUserWord(std::string const &msg) {
+    return splitStringIntoList(getUserLineString((msg)), ' ')[0];
+}
+
 ```
 
 ---
