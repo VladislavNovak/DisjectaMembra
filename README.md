@@ -10,20 +10,21 @@
     * [`bool hasFileExist(const char* path)`](#bool-hasfileexistconst-char-path)
     * [`bool isStringADate(string const &str, string &cause)`](#bool-isstringadatestring-const-str-string-cause)
     * [`bool convertDoubleFromString(string const &text, double &out)`](#bool-convertdoublefromstringstring-const-text-double-out)
-    * [`std::string getDelimitedString(const string &range)`](#stdstring-getdelimitedstringconst-string-range)
+    * [`string getDelimitedString(const string &list)`](#string-getdelimitedstringconst-string-list)
     * [`void removeSymbolFromString(string &readjust, char const symbol, int leave = 0)`](#void-removesymbolfromstringstring-readjust-char-const-symbol-int-leave--0)
     * [`int getNumberOfDigit(int digit)`](#int-getnumberofdigitint-digit)
     * [`int getRoundedIntWithStep(int val, int step = 10)`](#int-getroundedintwithstepint-val-int-step--10)
     * [`void flipArray (int (&arr)[T])`](#void-fliparray-int-arrt)
     * [`int getRandomIntInRange(int from, int to)`](#int-getrandomintinrangeint-from-int-to)
+    * [`vector<N> removeIntersections(vector<N> const &list, vector<N> const &intersection)`](#vectorn-removeintersectionsvectorn-const-list-vectorn-const-intersection)
     * [`vector<T> getShuffleVector(vector<T> const &data)`](#vectort-getshufflevectorvectort-const-data)
     * [`vector<T> getCopyVector(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getcopyvectorvectort-const-data-int-amount--0-int-firstpos--0)
     * [`vector<T> getShuffledCopyOfVectorRange(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getshuffledcopyofvectorrangevectort-const-data-int-amount--0-int-firstpos--0)
     * [`string getTrimmedString(string str, string const &whiteSpaces = " \r\n\t\v\f")`](#string-gettrimmedstringstring-str-string-const-whitespaces---rntvf)
-    * [`vector<string> splitStringIntoList(string const &str, const char delim = ',', bool isEmptyRemove = true)`](#vectorstring-splitstringintoliststring-const-str-const-char-delim---bool-isemptyremove--true)
+    * [`vector<string> splitStringIntoList(std::string const &str, char const delim = ',')`](#vectorstring-splitstringintoliststdstring-const-str-char-const-delim--)
     * [`T getUserInput(string const &restrictions = "")`](#t-getuserinputstring-const-restrictions--)
-    * [`std::string getUserLineString(const string &msg)`](#stdstring-getuserlinestringconst-string-msg)
-    * [`int getUserNumeric(const string &msg = "Введите цифры", int from = 0, int to = 0)`](#int-getusernumericconst-string-msg--введите-цифры-int-from--0-int-to--0)
+    * [`string getUserLineString(const string &msg)`](#string-getuserlinestringconst-string-msg)
+    * [`int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}, string const &msg = "Введите цифры") `](#int-getusernumericvectorint-const-list---vectorint-const-excludedlist---string-const-msg--введите-цифры-)
     * [`void outputListToStream(std::ostream &out, vector<vector<string>> const &list, const string &delim = ",", bool isNumbering = false)`](#void-outputlisttostreamstdostream-out-vectorvectorstring-const-list-const-string-delim---bool-isnumbering--false)
     * [`writeListToFile(const char* path, vector<string> const &list, bool isAppMode = true, const std::string &delim = ",")`](#writelisttofileconst-char-path-vectorstring-const-list-bool-isappmode--true-const-stdstring-delim--)
     * [`void printList(vector<string> const &list, const string &msg = "", const string &delim = ",", bool isNumbering = false)`](#void-printlistvectorstring-const-list-const-string-msg---const-string-delim---bool-isnumbering--false)
@@ -277,16 +278,17 @@ bool convertDoubleFromString(string const &str, double &out) {
 </details>
 
 ---
-### `std::string getDelimitedString(const string &range)`
+### `string getDelimitedString(const string &list)`
 
-Добавляет в копию строки между буквами разделитель в виде запятой. 
+Возвращает новую строку со знаками, разделенными аргументом delim 
 
 ```c++
-std::string getDelimitedString(const std::string &str) {
+template<typename T>
+std::string getDelimitedString(T const &list, char const delim = ',') {
     std::string delimitedString;
-    for (int i = 0; i < str.size(); ++i) {
-        delimitedString += str[i];
-        delimitedString += (i != str.size() - 1) ? ',' : '.';
+    for (int i = 0; i < list.size(); ++i) {
+        delimitedString += std::to_string(list[i]);
+        if (i != list.size() - 1) delimitedString += delim;
     }
 
     return delimitedString;
@@ -299,6 +301,16 @@ std::string getDelimitedString(const std::string &str) {
 |          |         | string | getUserInput | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L19) | getJoinRange |
 
 </details>
+
+Примеры использования:
+
+```c++
+string somethingString = "string";
+vector<int> someThingRange = {2,4,5};
+
+getDelimitedString(somethingString); // "s,t,r,i,n,g"
+getDelimitedString(someThingRange); // "2,4,5"
+```
 
 ---
 ### `void removeSymbolFromString(string &readjust, char const symbol, int leave = 0)`
@@ -436,6 +448,49 @@ std::srand(std::time(nullptr)); // NOLINT(cert-msc51-cpp)
 </details>
 
 ---
+### `vector<N> removeIntersections(vector<N> const &list, vector<N> const &intersection)`
+
+Возвращает результат вычета из первого переданного вектора второго
+
+```c++
+template<typename N>
+vector<N> removeIntersections(vector<N> const &list, vector<N> const &intersection) {
+    vector<N> results = list;
+
+    for (int i = 0; i < intersection.size(); ++i) {
+        for (int j = 0; j < results.size(); ++j) {
+            if (intersection[i] == results[j]) {
+                results.erase(results.begin() + j);
+                --j;
+            }
+        }
+    }
+
+    return results;
+}
+```
+
+<details><summary>Дополнительные данные</summary>
+
+| includes | depends | return   | links to use |
+|----------|---------|----------|--------------|
+|          |         | vector T |              |
+
+Пример применения:
+
+```c++
+vector<string> listStr = { "first", "second", "third", "third", "five", "third" };
+vector<string> intersectionsStr = { "third", "second" };
+vector<int> listInt = { 2,3,4,3,5,6,7,1,1,2};
+vector<int> intersectionsInt = { 5,1,2 };
+
+auto results1 = removeIntersections(listStr, intersectionsStr); // first, five
+auto results2 = removeIntersections(listInt, intersectionsInt); // 3,4,3,6,7
+```
+
+</details>
+
+---
 ### `vector<T> getShuffleVector(vector<T> const &data)`
 
 Перемешивает копию vector. Возвращает новый перемешанный вектор
@@ -537,12 +592,14 @@ std::string getTrimmedString(std::string str, std::string const &whiteSpaces = "
 </details>
 
 ---
-### `vector<string> splitStringIntoList(string const &str, const char delim = ',', bool isEmptyRemove = true)`
+### `vector<string> splitStringIntoList(std::string const &str, char const delim = ',')`
 
-Разбивает строку на подстроки. Если isEmptyRemove == false, то можно вернуть пустой вектор
+Разбивает строку на подстроки.
 
 ```c++
-std::vector<std::string> splitStringIntoList(std::string const &str, const char delim = ',', bool isEmptyRemove = true) {
+std::vector<std::string> splitStringIntoList(std::string const &str, char const delim = ',') {
+    bool isEmptyRemove = true
+            
     std::vector<std::string> list;
     std::stringstream ss(str);
     std::string rawRecord;
@@ -565,6 +622,8 @@ std::vector<std::string> splitStringIntoList(std::string const &str, const char 
 | includes | depends          | return            | use in         | links to use                                                                                                  | prev name               |
 |----------|------------------|-------------------|----------------|---------------------------------------------------------------------------------------------------------------|-------------------------|
 | sstream  | getTrimmedString | vector of strings | getUserNumeric | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L25) | getSplitStringOnRecords |
+
+Если изменить isEmptyRemove на false, то можно вернуть пустой элемент вектора
 
 Пример использования:
 
@@ -661,7 +720,7 @@ bool hasDialogYesNo(const std::string &msg) {
 </details>
 
 ---
-### `std::string getUserLineString(const string &msg)`
+### `string getUserLineString(const string &msg)`
 
 Пользовательский ввод. На основе `std::getline` получить всю строку до переноса. Конечные пробелы обрезаются. Пустая строка запрещается.
 
@@ -707,47 +766,75 @@ std::vector<std::string> userInputList = splitStringIntoList(getUserLineString(m
 </details>
 
 ---
-### `int getUserNumeric(const string &msg = "Введите цифры", int from = 0, int to = 0)`
+### `int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}, string const &msg = "Введите цифры") `
 
-Пользовательский ввод. Получить любое целое число. Если from != to, тогда ввести цифры возможно лишь в диапазоне от from до to
+Пользовательский ввод целого числа. 
 
 ```c++
-int getUserNumeric(const std::string &msg = "Введите цифры", int from = 0, int to = 0) {
-    std::string warning = "Попробуйте снова. Это должно быть целое число";
-    bool isRange = (from != to);
+int getUserNumeric(std::vector<int> const &list = {}, 
+                   std::vector<int> const &excludedList = {}, 
+                   const std::string &msg = "Введите цифры") {
+    
+    bool isRange = (list.size() == 2) && (list[0] < list[1]);
+    bool isList = !list.empty() && (list.size() != 2 || ((list.size() == 2) && (list[0] > list[1])));
+    bool isExcluded = !excludedList.empty();
 
     while (true) {
-        std::string userInput = splitStringIntoList(getUserLineString(msg), ' ')[0];
+        bool isTrouble = false;
+        cout << msg << ": ";
+        int userInput = getUserInput<int>();
 
-        if (!isNumeric(userInput)) {
-            printf("%s\n", warning.c_str());
+        vector<string> troubles;
+
+        if (isRange && (userInput < list[0] || userInput > list[1])) isTrouble = true;
+        if (isList && !isIncludes(list, userInput)) isTrouble = true;
+        if (isExcluded && isIncludes(excludedList, userInput)) isTrouble = true;
+
+        if (isTrouble) {
+            troubles.push_back("Попробуйте снова. Это должно быть целое число");
+            if (isRange) troubles.push_back("  и в диапазоне (" + std::to_string(list[0]) + " - " + std::to_string(list[1]) + ")");
+            if (isList) troubles.push_back("  и в списке из (" + getDelimitedString(list) + ")");
+            if (isExcluded) troubles.push_back("  и не входить в список из (" + getDelimitedString(excludedList) + ")");
+
+            for (auto const &trouble : troubles) cout << trouble << endl;
+
             continue;
         }
 
-        int num = std::stoi(userInput);
-
-        if (isRange && (num < from || num > to)) {
-            printf("%s в диапазоне (%i - %i)\n", warning.c_str(), from, to);
-            continue;
-        }
-
-        return num;
+        return userInput;
     }
 }
 ```
 
 <details><summary>Дополнительные данные</summary>
 
+| includes | depends                                                 | return | links to use                                                                                                  |
+|----------|---------------------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------|
+|          | isNumeric<br/>splitStringIntoList<br/>getUserLineString | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) |
+
+
+Ввести возможно:
+
+* Любое число - если ничего не передать в массиве.
+* В диапазоне - если передать два числа (меньшее и большее) в массиве.
+* В перечне - если передать массив НЕ из двух элементов или из двух, в котором первый элемент больше второго
+* За исключением - если добавить перечень во второй аргумент
+
+Пример использования:
+
+```c++
+std::cout << getUserNumeric({2, 3, 7, 6}) << std::endl; // 2||3||7||6
+std::cout << getUserNumeric({2, 6}) << std::endl; // 2 - 6
+std::cout << getUserNumeric({6, 2}) << std::endl; // 6 || 2
+std::cout << getUserNumeric() << std::endl; // any
+std::cout << getUserNumeric({1, 8}, {3,4,5}) << std::endl; // 1,2,6,7,8
+```
 Есть ещё несколько специфичных параллельных функций:
 
 - `getUserInput` (получить int, double или один символ char в указанном диапазоне)
 - `getUserLineString` (основано на std::getline и позволяет получить строку любой длины),
 - `getUserNumeric` (получение числа в диапазоне)
-
-| includes | depends                                                 | return | links to use                                                                                                  |
-|----------|---------------------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------|
-|          | isNumeric<br/>splitStringIntoList<br/>getUserLineString | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) |
-
+- 
 </details>
 
 ---
