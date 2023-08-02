@@ -21,19 +21,19 @@
     * [`vector<T> getCopyVector(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getcopyvectorvectort-const-data-int-amount--0-int-firstpos--0)
     * [`vector<T> getShuffledCopyOfVectorRange(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getshuffledcopyofvectorrangevectort-const-data-int-amount--0-int-firstpos--0)
     * [`string getTrimmedString(string str, string const &whiteSpaces = " \r\n\t\v\f")`](#string-gettrimmedstringstring-str-string-const-whitespaces---rntvf)
-    * [`vector<string> splitStringIntoList(std::string const &str, char const delim = ',')`](#vectorstring-splitstringintoliststdstring-const-str-char-const-delim--)
+    * [`vector<string> splitStringIntoList(string const &str, char const delim = ',')`](#vectorstring-splitstringintoliststring-const-str-char-const-delim--)
     * [`T getUserInput(string const &restrictions = "")`](#t-getuserinputstring-const-restrictions--)
+    * [`int getIndexOfUserInputFromList(vector<string> const &list)`](#int-getindexofuserinputfromlistvectorstring-const-list)
     * [`string getUserLineString(const string &msg)`](#string-getuserlinestringconst-string-msg)
-    * [`int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}, string const &msg = "Введите цифры") `](#int-getusernumericvectorint-const-list---vectorint-const-excludedlist---string-const-msg--введите-цифры-)
-    * [`void outputListToStream(std::ostream &out, vector<vector<string>> const &list, const string &delim = ",", bool isNumbering = false)`](#void-outputlisttostreamstdostream-out-vectorvectorstring-const-list-const-string-delim---bool-isnumbering--false)
-    * [`writeListToFile(const char* path, vector<string> const &list, bool isAppMode = true, const std::string &delim = ",")`](#writelisttofileconst-char-path-vectorstring-const-list-bool-isappmode--true-const-stdstring-delim--)
-    * [`void printList(vector<string> const &list, const string &msg = "", const string &delim = ",", bool isNumbering = false)`](#void-printlistvectorstring-const-list-const-string-msg---const-string-delim---bool-isnumbering--false)
+    * [`int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}) `](#int-getusernumericvectorint-const-list---vectorint-const-excludedlist---)
+    * [`void outputListToStream(ostream &out, vector<vector<string>> const &list, const string &delim = ",")`](#void-outputlisttostreamostream-out-vectorvectorstring-const-list-const-string-delim--)
+    * [`writeListToFile(const char* path, vector<string> const &list, bool isAppMode = true, string const &delim = ",")`](#writelisttofileconst-char-path-vectorstring-const-list-bool-isappmode--true-string-const-delim--)
     * [`bool readFileToList(const char* pathName, vector<string> &list)`](#bool-readfiletolistconst-char-pathname-vectorstring-list)
     * [`void displayFileToScreen(const char* pathName, string const &msg)`](#void-displayfiletoscreenconst-char-pathname-string-const-msg)
     * [`bool loadStringFromBinaryFile(const char* fileName, string &str)`](#bool-loadstringfrombinaryfileconst-char-filename-string-str)
-    * [`void saveStringToBinaryFile(const char* path, const string &str, bool isAppMode = false, const char delim = ';')`](#void-savestringtobinaryfileconst-char-path-const-string-str-bool-isappmode--false-const-char-delim--)
+    * [`void saveStringToBinaryFile(const char* path, const string &str, bool isAppMode = false, char delim = ';')`](#void-savestringtobinaryfileconst-char-path-const-string-str-bool-isappmode--false-char-delim--)
     * [`bool loadIntoArrFromBinaryFile(const char* path, vector<T> &arr)`](#bool-loadintoarrfrombinaryfileconst-char-path-vectort-arr)
-    * [`bool readIntoPersonFromBinaryFile(std::ifstream &fileReader, character &person)`](#bool-readintopersonfrombinaryfilestdifstream-filereader-character-person)
+    * [`bool readIntoPersonFromBinaryFile(ifstream &fileReader, character &person)`](#bool-readintopersonfrombinaryfileifstream-filereader-character-person)
     * [`void savePersonToBinaryFile(const char* path, character const &person)`](#void-savepersontobinaryfileconst-char-path-character-const-person)
 <!-- TOC -->
 
@@ -117,13 +117,9 @@ int findIndexInVector(std::vector<T> const &list, const T &key) {
 Пример использования:
 
 ```c++
-std::vector<std::string> list = { "first", "second", "third" };
-std::string key = "third";
+int result = findIndexInVector<string>({ "first", "second", "third" }, "third");
 
-int result = findIndexInVector(list, key);
-
-if (result != 1)
-    std::cout << result << std::endl;
+if (result != 1) std::cout << result << std::endl;
 ```
 </details>
 
@@ -592,7 +588,7 @@ std::string getTrimmedString(std::string str, std::string const &whiteSpaces = "
 </details>
 
 ---
-### `vector<string> splitStringIntoList(std::string const &str, char const delim = ',')`
+### `vector<string> splitStringIntoList(string const &str, char const delim = ',')`
 
 Разбивает строку на подстроки.
 
@@ -664,7 +660,7 @@ template<typename T> T getUserInput(std::string const &restrictions = "") {
             continue;
         }
 
-        if ((restrictions.length() && isIncludes(restrictions, input)) || !restrictions.length()) break;
+        if ((restrictions.length() && isIncludes(restrictions, input)) || restrictions.empty()) break;
 
         printf(warning, input, getDelimitedString(restrictions).c_str());
 
@@ -687,6 +683,7 @@ template<typename T> T getUserInput(std::string const &restrictions = "") {
 - `getUserInput` (получить int, double или один символ char в указанном диапазоне)
 - `getUserLineString` (основано на std::getline и позволяет получить строку любой длины),
 - `getUserNumeric` (получение числа в диапазоне)
+- `getIndexOfUserInputFromList` (получить одну из опций)
 
 | includes | depends                           | return | use in | links to use                                                                                                  | prev name   |
 |----------|-----------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|-------------|
@@ -710,12 +707,54 @@ int getUserChoiceFromRange(const std::string &msg, std::string const &range) {
     return (getUserInput<char>(range) - '0');
 }
 ```
+Возможная альтернатива для `getIndexOfUserInputFromList`:
+
 ```c++
 // Возвращает true при введении Y/y или false при N/n. Другие символы запрещены
 bool hasDialogYesNo(const std::string &msg) {
     printf("%s. Press 'Y/y' to agree or 'N/n' to deny: ", msg.c_str());
     return isIncludes("Yy", getUserChar<char>("YyNn"));
 }
+```
+</details>
+
+---
+### `int getIndexOfUserInputFromList(vector<string> const &list)`
+
+Требует ввод от пользователя одного из элементов переданного списка. Возвращает индекс выбранного элемента списка
+
+```c++
+int getIndexOfUserInputFromList(std::vector<std::string> const &list) {
+    bool isList = list.size() > 1;
+
+    while (true) {
+        cout << (isList ? "Выберите одну из опций: " : "Введите команду : ");
+        outputListToStream(std::cout, list, (isList ? "|" : ""));
+
+        auto userInput = getUserLineString("Наберите и нажмите enter");
+        // return index from list, if word found
+        for (int i = 0; i < list.size(); ++i) if (list[i] == userInput) return i;
+
+        cout << "Неверно. Попробуйте снова!" << endl;
+    }
+}
+```
+<details><summary>Дополнительные данные</summary>
+
+| includes | depends                                  | return | use in | links to use |
+|----------|------------------------------------------|--------|--------|--------------|
+| limits   | outputListToStream<br/>getUserLineString | int    |        |              |
+
+Фактически является прототипом меню по действию. В качестве альтернативы можно использовать `getUserInput/hasDialogYesNo`
+
+```c++
+  if (getIndexOfUserInputFromList({ "yes", "no" }) == 0) {
+    // Действие
+  }
+```
+```c++
+auto index = getIndexOfUserInputFromList({ "add", "edit", "about", "exit" });
+// Далее - switch case по номерам
 ```
 </details>
 
@@ -766,22 +805,20 @@ std::vector<std::string> userInputList = splitStringIntoList(getUserLineString(m
 </details>
 
 ---
-### `int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}, string const &msg = "Введите цифры") `
+### `int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}) `
 
 Пользовательский ввод целого числа. 
 
 ```c++
-int getUserNumeric(std::vector<int> const &list = {}, 
-                   std::vector<int> const &excludedList = {}, 
-                   const std::string &msg = "Введите цифры") {
-    
+int getUserNumeric(std::vector<int> const &list = {}, std::vector<int> const &excludedList = {}) {
+
     bool isRange = (list.size() == 2) && (list[0] < list[1]);
     bool isList = !list.empty() && (list.size() != 2 || ((list.size() == 2) && (list[0] > list[1])));
     bool isExcluded = !excludedList.empty();
 
     while (true) {
         bool isTrouble = false;
-        cout << msg << ": ";
+        cout << "Введите цифры" << ": ";
         int userInput = getUserInput<int>();
 
         vector<string> troubles;
@@ -791,10 +828,10 @@ int getUserNumeric(std::vector<int> const &list = {},
         if (isExcluded && isIncludes(excludedList, userInput)) isTrouble = true;
 
         if (isTrouble) {
-            troubles.push_back("Попробуйте снова. Это должно быть целое число");
-            if (isRange) troubles.push_back("  и в диапазоне (" + std::to_string(list[0]) + " - " + std::to_string(list[1]) + ")");
-            if (isList) troubles.push_back("  и в списке из (" + getDelimitedString(list) + ")");
-            if (isExcluded) troubles.push_back("  и не входить в список из (" + getDelimitedString(excludedList) + ")");
+            troubles.emplace_back("Попробуйте снова. Это должно быть целое число");
+            if (isRange) troubles.emplace_back("  и в диапазоне (" + std::to_string(list[0]) + " - " + std::to_string(list[1]) + ")");
+            if (isList) troubles.emplace_back("  и в списке из (" + getDelimitedString(list) + ")");
+            if (isExcluded) troubles.emplace_back("  и не входить в список из (" + getDelimitedString(excludedList) + ")");
 
             for (auto const &trouble : troubles) cout << trouble << endl;
 
@@ -804,13 +841,14 @@ int getUserNumeric(std::vector<int> const &list = {},
         return userInput;
     }
 }
+
 ```
 
 <details><summary>Дополнительные данные</summary>
 
-| includes | depends                                                 | return | links to use                                                                                                  |
-|----------|---------------------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------|
-|          | isNumeric<br/>splitStringIntoList<br/>getUserLineString | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) |
+| includes | depends      | return | links to use                                                                                                  |
+|----------|--------------|--------|---------------------------------------------------------------------------------------------------------------|
+|          | getUserInput | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) |
 
 
 Ввести возможно:
@@ -838,13 +876,14 @@ std::cout << getUserNumeric({1, 8}, {3,4,5}) << std::endl; // 1,2,6,7,8
 </details>
 
 ---
-### `void outputListToStream(std::ostream &out, vector<vector<string>> const &list, const string &delim = ",", bool isNumbering = false)`
+### `void outputListToStream(ostream &out, vector<vector<string>> const &list, const string &delim = ",")`
 
 Печатает данные в указанный поток. Потоком может быть std::cout, а может быть и std::ofstream file. 
 Таким образом, данные можно или вывести на экран, или распечатать в файл. Важно лишь, чтобы данные были массивом строк.
 
 ```c++
-void outputListToStream(std::ostream &out, std::vector<std::string> const &list, const std::string &delim = ",", bool isNumbering = false) {
+void outputListToStream(std::ostream &out, std::vector<std::string> const &list, const std::string &delim = ",") {
+    bool isNumbering = false;
     for (int i = 0; i < list.size(); ++i)
         out << (isNumbering ? std::to_string(i) + ": " + list[i] : list[i]) << (i != list.size() - 1 ? delim : "");
 
@@ -872,12 +911,12 @@ void outputComplexToStream(std::ostream &out, vector<vector<string>> const &comp
 </details>
 
 ---
-### `writeListToFile(const char* path, vector<string> const &list, bool isAppMode = true, const std::string &delim = ",")`
+### `writeListToFile(const char* path, vector<string> const &list, bool isAppMode = true, string const &delim = ",")`
 
 Запись в файл. Печатает вектор в файл
 
 ```c++
-void writeListToFile(const char* path, std::vector<std::string> const &list, bool isAppMode = true, const std::string &delim = ",") {
+void writeListToFile(const char* path, std::vector<std::string> const &list, bool isAppMode = true, std::string const &delim = ",") {
     std::ofstream file(path, (isAppMode ? std::ios::app : std::ios::out));
     outputListToStream(file, list, delim);
     file.close();
@@ -888,27 +927,6 @@ void writeListToFile(const char* path, std::vector<std::string> const &list, boo
 | includes | depends            | return | links to use           | prev name              |
 |----------|--------------------|--------|------------------------|------------------------|
 | fstream  | outputListToStream |        | writeReadFileExample() | writeComplexDataToFile |
-
-</details>
-
----
-### `void printList(vector<string> const &list, const string &msg = "", const string &delim = ",", bool isNumbering = false)`
-
-Выводит данные на экран. Обычная печать простого вектора
-
-```c++
-void printList(std::vector<std::string> const &list, const std::string &msg = "", const std::string &delim = ",", bool isNumbering = false) {
-    if (msg.length())
-        std::cout << msg << ": " << std::endl;
-
-    outputListToStream(std::cout, list, delim, isNumbering);
-}
-```
-<details><summary>Дополнительные данные</summary>
-
-| includes | depends            | return | links to use           | prev name                  |
-|----------|--------------------|--------|------------------------|----------------------------|
-|          | outputListToStream |        | writeReadFileExample() | displayComplexDataToScreen |
 
 </details>
 
@@ -961,7 +979,7 @@ void displayFileToScreen(const char* pathName, std::string const &msg) {
     system("cls");
 
     if (!data.empty()) {
-        printList(data, msg, ", ");
+        // Использовать outputListToStream
     } else {
         std::cout << "Данных пока нет" << std::endl;
     }
@@ -969,9 +987,9 @@ void displayFileToScreen(const char* pathName, std::string const &msg) {
 ```
 <details><summary>Дополнительные данные</summary>
 
-| includes | depends                      | return | links to use           |
-|----------|------------------------------|--------|------------------------|
-|          | readFileToList<br/>printList |        | writeReadFileExample() |
+| includes | depends                               | return | links to use           |
+|----------|---------------------------------------|--------|------------------------|
+|          | readFileToList<br/>outputListToStream |        | writeReadFileExample() |
 
 </details>
 
@@ -1027,7 +1045,7 @@ bool loadStringFromBinaryFile(const char* path, std::string &str) {
 </details>
 
 ---
-### `void saveStringToBinaryFile(const char* path, const string &str, bool isAppMode = false, const char delim = ';')`
+### `void saveStringToBinaryFile(const char* path, const string &str, bool isAppMode = false, char delim = ';')`
 
 Запись в двоичный (бинарный) файл из строки
 
@@ -1035,7 +1053,7 @@ bool loadStringFromBinaryFile(const char* path, std::string &str) {
 void saveStringToBinaryFile(const char* path,
                             std::string const &str,
                             bool isAppMode = false,
-                            const char delim = ';') {    
+                            char delim = ';') {    
     std::ofstream file(path, std::ios::binary | (isAppMode ? std::ios::app : std::ios::out));
 
     if (hasFileExist(path) && isAppMode)
@@ -1090,7 +1108,7 @@ bool loadIntoArrFromBinaryFile(const char* path, vector<T> &arr) {
 </details>
 
 ---
-### `bool readIntoPersonFromBinaryFile(std::ifstream &fileReader, character &person)`
+### `bool readIntoPersonFromBinaryFile(ifstream &fileReader, character &person)`
 
 Читает из бинарного (двоичного) файла в структуру.
 
