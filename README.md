@@ -4,7 +4,8 @@
 * [<font color="Tomato">Pragmata</font>](#font-colortomatopragmatafont)
     * [`bool isIncludes(const T &range, const N &item)`](#bool-isincludesconst-t-range-const-n-item)
     * [`bool hasSubstr(const char *origin, const char *substr)`](#bool-hassubstrconst-char-origin-const-char-substr)
-    * [`int findIndexInVector(vector<T> const &list, const T &key)`](#int-findindexinvectorvectort-const-list-const-t-key)
+    * [`int findKeyIndexInVector(const T &key, vector<T> const &list)`](#int-findkeyindexinvectorconst-t-key-vectort-const-list)
+    * [`bool removeKeyFromVector(const T &key, vector<T> &list)`](#bool-removekeyfromvectorconst-t-key-vectort-list)
     * [`bool isNumeric(string const &str)`](#bool-isnumericstring-const-str)
     * [`bool isContainsOnlyLetters(std::string const &str)`](#bool-iscontainsonlylettersstdstring-const-str)
     * [`bool hasFileExist(const char* path)`](#bool-hasfileexistconst-char-path)
@@ -23,7 +24,7 @@
     * [`string getTrimmedString(string str, string const &whiteSpaces = " \r\n\t\v\f")`](#string-gettrimmedstringstring-str-string-const-whitespaces---rntvf)
     * [`vector<string> splitStringIntoList(string const &str, char const delim = ',')`](#vectorstring-splitstringintoliststring-const-str-char-const-delim--)
     * [`T getUserInput(string const &restrictions = "")`](#t-getuserinputstring-const-restrictions--)
-    * [`int getIndexOfUserInputFromList(vector<string> const &list)`](#int-getindexofuserinputfromlistvectorstring-const-list)
+    * [`int getUserSelectionFromList(vector<string> const &list)`](#int-getuserselectionfromlistvectorstring-const-list)
     * [`string getUserLineString(const string &msg)`](#string-getuserlinestringconst-string-msg)
     * [`int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}) `](#int-getusernumericvectorint-const-list---vectorint-const-excludedlist---)
     * [`void outputListToStream(ostream &out, vector<vector<string>> const &list, const string &delim = ",")`](#void-outputlisttostreamostream-out-vectorvectorstring-const-list-const-string-delim--)
@@ -91,13 +92,13 @@ bool hasSubstr(const char *origin, const char *substr) {
 </details>
 
 ---
-### `int findIndexInVector(vector<T> const &list, const T &key)`
+### `int findKeyIndexInVector(const T &key, vector<T> const &list)`
 
 Поиск key в vector. В случае успеха, возвращает позицию. Если ничего не найдено, возвращается -1
 
 ```c++
 template<typename T>
-int findIndexInVector(std::vector<T> const &list, const T &key) {
+int findKeyIndexInVector(const T &key, std::vector<T> const &list) {
     const int NOT_FOUND = -1;
     auto it = std::find_if(list.cbegin(), list.cend(), [key](const T &i){ return i == key; });
 
@@ -110,17 +111,52 @@ int findIndexInVector(std::vector<T> const &list, const T &key) {
 ```
 <details><summary>Дополнительные данные</summary>
 
-| includes  | depends | return | use in | links to use                                                                                                   |
-|-----------|---------|--------|--------|----------------------------------------------------------------------------------------------------------------|
-| algorithm |         | int    |        | [20_5_3](https://github.com/VladislavNovak/20_5_3/blob/1362c3ece3cbcf12cd29d26cf90eb84146f75d93/main.cpp#L142) |
+| includes  | depends | return | use in | links to use |
+|-----------|---------|--------|--------|--------------|
+| algorithm |         | int    |        |              |
 
 Пример использования:
 
 ```c++
-int result = findIndexInVector<string>({ "first", "second", "third" }, "third");
+int result = findKeyIndexInVector<string>("third", { "first", "second", "third" });
 
 if (result != 1) std::cout << result << std::endl;
 ```
+</details>
+
+--- 
+### `bool removeKeyFromVector(const T &key, vector<T> &list)`
+
+Позволяет удалить позицию из вектора по переданному ключу. Возвращает true, если удаление прошло успешно
+
+```c++
+template<typename T>
+bool removeKeyFromVector(const T &key, vector<T> &list) {
+    auto foundIndex = findKeyIndexInVector(key, list);
+    if (foundIndex == -1) return false;
+
+    list.erase(list.begin() + foundIndex);
+
+    return true;
+}
+```
+
+<details><summary>Дополнительная информация</summary>
+
+| includes | depends              | return | use in | links to use |
+|----------|----------------------|--------|--------|--------------|
+|          | findKeyIndexInVector | bool   |        |              |
+
+Пример использования:
+
+```c++
+vector<string> commands = { "add", "exit", "edit" };
+vector<int> range = { 5, 4, 2};
+
+removeKeyFromVector<string>("edit", commands); // "exit", "edit"
+removeKeyFromVector(2, range); // 5, 4
+```
+
 </details>
 
 ---
@@ -683,7 +719,7 @@ template<typename T> T getUserInput(std::string const &restrictions = "") {
 - `getUserInput` (получить int, double или один символ char в указанном диапазоне)
 - `getUserLineString` (основано на std::getline и позволяет получить строку любой длины),
 - `getUserNumeric` (получение числа в диапазоне)
-- `getIndexOfUserInputFromList` (получить одну из опций)
+- `getUserSelectionFromList` (получить одну из опций)
 
 | includes | depends                           | return | use in | links to use                                                                                                  | prev name   |
 |----------|-----------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|-------------|
@@ -707,7 +743,7 @@ int getUserChoiceFromRange(const std::string &msg, std::string const &range) {
     return (getUserInput<char>(range) - '0');
 }
 ```
-Возможная альтернатива для `getIndexOfUserInputFromList`:
+Возможная альтернатива для `getUserSelectionFromList`:
 
 ```c++
 // Возвращает true при введении Y/y или false при N/n. Другие символы запрещены
@@ -719,12 +755,12 @@ bool hasDialogYesNo(const std::string &msg) {
 </details>
 
 ---
-### `int getIndexOfUserInputFromList(vector<string> const &list)`
+### `int getUserSelectionFromList(vector<string> const &list)`
 
 Требует ввод от пользователя одного из элементов переданного списка. Возвращает индекс выбранного элемента списка
 
 ```c++
-int getIndexOfUserInputFromList(std::vector<std::string> const &list) {
+int getUserSelectionFromList(std::vector<std::string> const &list) {
     bool isList = list.size() > 1;
 
     while (true) {
@@ -748,12 +784,12 @@ int getIndexOfUserInputFromList(std::vector<std::string> const &list) {
 Фактически является прототипом меню по действию. В качестве альтернативы можно использовать `getUserInput/hasDialogYesNo`
 
 ```c++
-  if (getIndexOfUserInputFromList({ "yes", "no" }) == 0) {
+  if (getUserSelectionFromList({ "yes", "no" }) == 0) {
     // Действие
   }
 ```
 ```c++
-auto index = getIndexOfUserInputFromList({ "add", "edit", "about", "exit" });
+auto index = getUserSelectionFromList({ "add", "edit", "about", "exit" });
 // Далее - switch case по номерам
 ```
 </details>
