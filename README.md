@@ -17,6 +17,7 @@
     * [`int getRoundedIntWithStep(int val, int step = 10)`](#int-getroundedintwithstepint-val-int-step--10)
     * [`void flipArray (int (&arr)[T])`](#void-fliparray-int-arrt)
     * [`int getRandomIntInRange(int from, int to)`](#int-getrandomintinrangeint-from-int-to)
+    * [`int getAvailableIndexInRange(vector<int> const &range)`](#int-getavailableindexinrangevectorint-const-range)
     * [`vector<N> removeIntersections(vector<N> const &list, vector<N> const &intersection)`](#vectorn-removeintersectionsvectorn-const-list-vectorn-const-intersection)
     * [`vector<T> getShuffleVector(vector<T> const &data)`](#vectort-getshufflevectorvectort-const-data)
     * [`vector<T> getCopyVector(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getcopyvectorvectort-const-data-int-amount--0-int-firstpos--0)
@@ -24,7 +25,7 @@
     * [`string getTrimmedString(string str, string const &whiteSpaces = " \r\n\t\v\f")`](#string-gettrimmedstringstring-str-string-const-whitespaces---rntvf)
     * [`vector<string> splitStringIntoList(string const &str, char const delim = ',')`](#vectorstring-splitstringintoliststring-const-str-char-const-delim--)
     * [`T getUserInput(string const &restrictions = "")`](#t-getuserinputstring-const-restrictions--)
-    * [`int getUserSelectionFromList(vector<string> const &list)`](#int-getuserselectionfromlistvectorstring-const-list)
+    * [`int selectFromList(vector<string> const &list)`](#int-selectfromlistvectorstring-const-list)
     * [`string getUserLineString(const string &msg)`](#string-getuserlinestringconst-string-msg)
     * [`int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}) `](#int-getusernumericvectorint-const-list---vectorint-const-excludedlist---)
     * [`void outputListToStream(ostream &out, vector<vector<string>> const &list, const string &delim = ",")`](#void-outputlisttostreamostream-out-vectorvectorstring-const-list-const-string-delim--)
@@ -36,6 +37,10 @@
     * [`bool loadIntoArrFromBinaryFile(const char* path, vector<T> &arr)`](#bool-loadintoarrfrombinaryfileconst-char-path-vectort-arr)
     * [`bool readIntoPersonFromBinaryFile(ifstream &fileReader, character &person)`](#bool-readintopersonfrombinaryfileifstream-filereader-character-person)
     * [`void savePersonToBinaryFile(const char* path, character const &person)`](#void-savepersontobinaryfileconst-char-path-character-const-person)
+    * [`bool addEntryToMap(const std::pair<F, S> &entry, std::map<F, S> &target)`](#bool-addentrytomapconst-stdpairf-s-entry-stdmapf-s-target)
+    * [`bool changeEntryInMap(const std::pair<F, S> &entry, std::map<F, S> &target)`](#bool-changeentryinmapconst-stdpairf-s-entry-stdmapf-s-target)
+    * [`bool removeEntryFromMap(const F &key, std::map<F, S> &target)`](#bool-removeentryfrommapconst-f-key-stdmapf-s-target)
+    * [`bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source)`](#bool-retrievemapvaluebykeys-target-const-f-key-const-stdmapf-s-source)
 <!-- TOC -->
 
 ---
@@ -150,10 +155,18 @@ bool removeKeyFromVector(const T &key, vector<T> &list) {
 Пример использования:
 
 ```c++
+void removeCommand(string const &key, vector<string> &list) {
+    removeKeyFromVector<string>(key, list);
+}
+```
+```c++
 vector<string> commands = { "add", "exit", "edit" };
 vector<int> range = { 5, 4, 2};
 
 removeKeyFromVector<string>("edit", commands); // "exit", "edit"
+// теперь можно и так:
+removeCommand("exit", commands); // "edit"
+
 removeKeyFromVector(2, range); // 5, 4
 ```
 
@@ -480,6 +493,37 @@ std::srand(std::time(nullptr)); // NOLINT(cert-msc51-cpp)
 </details>
 
 ---
+### `int getAvailableIndexInRange(vector<int> const &range)`
+
+Получить первый пропущенный индекс в массиве. Либо новый (т.е. последний + 1)
+
+```c++
+int getAvailableIndexInRange(std::vector<int> const &range) {
+    std::vector<int> tempRange = range;
+    std::sort(tempRange.begin(), tempRange.end());
+    
+    int current = 0;
+    while(current < tempRange.size()) {
+        if (current != tempRange[current]) break;
+        ++current;
+    }
+    
+    return current;
+}
+```
+
+<details><summary>Дополнительные данные</summary>
+
+Хорошо подходит для поиска свободного идентификатора
+
+```c++
+getAvailableIndexInRange({ 0, 1, 3, 4 }) // 2
+getAvailableIndexInRange({ 0, 1, 2, 3 }) // 4
+```
+
+</details>
+
+---
 ### `vector<N> removeIntersections(vector<N> const &list, vector<N> const &intersection)`
 
 Возвращает результат вычета из первого переданного вектора второго
@@ -719,7 +763,7 @@ template<typename T> T getUserInput(std::string const &restrictions = "") {
 - `getUserInput` (получить int, double или один символ char в указанном диапазоне)
 - `getUserLineString` (основано на std::getline и позволяет получить строку любой длины),
 - `getUserNumeric` (получение числа в диапазоне)
-- `getUserSelectionFromList` (получить одну из опций)
+- `selectFromList` (получить одну из опций)
 
 | includes | depends                           | return | use in | links to use                                                                                                  | prev name   |
 |----------|-----------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|-------------|
@@ -743,7 +787,7 @@ int getUserChoiceFromRange(const std::string &msg, std::string const &range) {
     return (getUserInput<char>(range) - '0');
 }
 ```
-Возможная альтернатива для `getUserSelectionFromList`:
+Возможная альтернатива для `selectFromList`:
 
 ```c++
 // Возвращает true при введении Y/y или false при N/n. Другие символы запрещены
@@ -755,12 +799,12 @@ bool hasDialogYesNo(const std::string &msg) {
 </details>
 
 ---
-### `int getUserSelectionFromList(vector<string> const &list)`
+### `int selectFromList(vector<string> const &list)`
 
 Требует ввод от пользователя одного из элементов переданного списка. Возвращает индекс выбранного элемента списка
 
 ```c++
-int getUserSelectionFromList(std::vector<std::string> const &list) {
+int selectFromList(std::vector<std::string> const &list) {
     bool isList = list.size() > 1;
 
     while (true) {
@@ -784,12 +828,12 @@ int getUserSelectionFromList(std::vector<std::string> const &list) {
 Фактически является прототипом меню по действию. В качестве альтернативы можно использовать `getUserInput/hasDialogYesNo`
 
 ```c++
-  if (getUserSelectionFromList({ "yes", "no" }) == 0) {
+  if (selectFromList({ "yes", "no" }) == 0) {
     // Действие
   }
 ```
 ```c++
-auto index = getUserSelectionFromList({ "add", "edit", "about", "exit" });
+auto index = selectFromList({ "add", "edit", "about", "exit" });
 // Далее - switch case по номерам
 ```
 </details>
@@ -1216,7 +1260,74 @@ struct character { string name; int salary; };
 ```
 </details>
 
+---
+### `bool addEntryToMap(const std::pair<F, S> &entry, std::map<F, S> &target)`
 
+Добавить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
+
+```c++
+template<typename F, typename S>
+bool addEntryToMap(const std::pair<F, S> &entry, std::map<F, S> &target) {
+    if (target.count(entry.first) == 1) return false;
+
+    target.insert(entry);
+
+    return true;
+}
+```
+
+---
+### `bool changeEntryInMap(const std::pair<F, S> &entry, std::map<F, S> &target)`
+
+Изменить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
+
+```c++
+template<typename F, typename S>
+bool changeEntryInMap(const std::pair<F, S> &entry, std::map<F, S> &target) {
+    if (target.count(entry.first) == 0) return false;
+
+    auto it = target.find(entry.first);
+    it->second = entry.second;
+
+    return true;
+}
+```
+
+---
+### `bool removeEntryFromMap(const F &key, std::map<F, S> &target)`
+
+Удалить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
+
+```c++
+template<typename F, typename S>
+bool removeEntryFromMap(const F &key, std::map<F, S> &target) {
+    const auto it = target.find(key);
+
+    if (it == target.end()) return false;
+
+    target.erase(it);
+
+    return true;
+}
+```
+
+---
+### `bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source)`
+
+Вернуть одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
+
+```c++
+template<typename F, typename S>
+bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source) {
+    const auto it = source.find(key);
+
+    if (it == source.end()) return false;
+
+    target = it->second;
+
+    return true;
+}
+```
 
 
 
