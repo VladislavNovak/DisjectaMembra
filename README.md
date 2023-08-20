@@ -24,10 +24,11 @@
     * [`vector<T> getShuffledCopyOfVectorRange(vector<T> const &data, int amount = 0, int firstPos = 0)`](#vectort-getshuffledcopyofvectorrangevectort-const-data-int-amount--0-int-firstpos--0)
     * [`string getTrimmedString(string str, string const &whiteSpaces = " \r\n\t\v\f")`](#string-gettrimmedstringstring-str-string-const-whitespaces---rntvf)
     * [`vector<string> splitStringIntoList(string const &str, char const delim = ',')`](#vectorstring-splitstringintoliststring-const-str-char-const-delim--)
-    * [`T getUserInput(string const &restrictions = "")`](#t-getuserinputstring-const-restrictions--)
+    * [`T putInput(string const &restrictions = "")`](#t-putinputstring-const-restrictions--)
     * [`int selectFromList(vector<string> const &list)`](#int-selectfromlistvectorstring-const-list)
-    * [`string getUserLineString(const string &msg)`](#string-getuserlinestringconst-string-msg)
-    * [`int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}) `](#int-getusernumericvectorint-const-list---vectorint-const-excludedlist---)
+    * [`int selectMenuItem(vector<string> const &list)`](#int-selectmenuitemvectorstring-const-list)
+    * [`string putLineString(const string &msg)`](#string-putlinestringconst-string-msg)
+    * [`int putNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}) `](#int-putnumericvectorint-const-list---vectorint-const-excludedlist---)
     * [`void outputListToStream(ostream &out, vector<vector<string>> const &list, const string &delim = ",")`](#void-outputlisttostreamostream-out-vectorvectorstring-const-list-const-string-delim--)
     * [`writeListToFile(const char* path, vector<string> const &list, bool isAppMode = true, string const &delim = ",")`](#writelisttofileconst-char-path-vectorstring-const-list-bool-isappmode--true-string-const-delim--)
     * [`bool readFileToList(const char* pathName, vector<string> &list)`](#bool-readfiletolistconst-char-pathname-vectorstring-list)
@@ -41,6 +42,7 @@
     * [`bool changeEntryInMap(const std::pair<F, S> &entry, std::map<F, S> &target)`](#bool-changeentryinmapconst-stdpairf-s-entry-stdmapf-s-target)
     * [`bool removeEntryFromMap(const F &key, std::map<F, S> &target)`](#bool-removeentryfrommapconst-f-key-stdmapf-s-target)
     * [`bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source)`](#bool-retrievemapvaluebykeys-target-const-f-key-const-stdmapf-s-source)
+    * [`void eraseEmptyEntriesFromMap(std::map<char, int> &out)`](#void-eraseemptyentriesfrommapstdmapchar-int-out)
 <!-- TOC -->
 
 ---
@@ -58,9 +60,9 @@ bool isIncludes(const T &range, const N &item) {
 ```
 <details><summary>Дополнительные данные</summary>
 
-| includes  | depends | return | use in       | links to use                                                                                                  |
-|-----------|---------|--------|--------------|---------------------------------------------------------------------------------------------------------------|
-| algorithm |         | bool   | getUserInput | [16_6_4](https://github.com/VladislavNovak/16_6_4/blob/5e27ffd9e4b65dbeb05fa8feb3af24d4e61339e0/main.cpp#L12) |
+| includes  | depends | return | use in   | links to use                                                                                                  |
+|-----------|---------|--------|----------|---------------------------------------------------------------------------------------------------------------|
+| algorithm |         | bool   | putInput | [16_6_4](https://github.com/VladislavNovak/16_6_4/blob/5e27ffd9e4b65dbeb05fa8feb3af24d4e61339e0/main.cpp#L12) |
 
 Пример использования:
 
@@ -341,9 +343,9 @@ std::string getDelimitedString(T const &list, char const delim = ',') {
 ```
 <details><summary>Дополнительные данные</summary>
 
-| includes | depends | return | use in       | links to use                                                                                                  | prev name    |
-|----------|---------|--------|--------------|---------------------------------------------------------------------------------------------------------------|--------------|
-|          |         | string | getUserInput | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L19) | getJoinRange |
+| includes | depends | return | use in   | links to use                                                                                                  | prev name    |
+|----------|---------|--------|----------|---------------------------------------------------------------------------------------------------------------|--------------|
+|          |         | string | putInput | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L19) | getJoinRange |
 
 </details>
 
@@ -674,7 +676,7 @@ std::string getTrimmedString(std::string str, std::string const &whiteSpaces = "
 
 ```c++
 std::vector<std::string> splitStringIntoList(std::string const &str, char const delim = ',') {
-    bool isEmptyRemove = true
+    bool isEmptyRemove = true;
             
     std::vector<std::string> list;
     std::stringstream ss(str);
@@ -695,9 +697,9 @@ std::vector<std::string> splitStringIntoList(std::string const &str, char const 
 
 <details><summary>Дополнительные данные</summary>
 
-| includes | depends          | return            | use in         | links to use                                                                                                  | prev name               |
-|----------|------------------|-------------------|----------------|---------------------------------------------------------------------------------------------------------------|-------------------------|
-| sstream  | getTrimmedString | vector of strings | getUserNumeric | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L25) | getSplitStringOnRecords |
+| includes | depends          | return            | use in     | links to use                                                                                                  | prev name               |
+|----------|------------------|-------------------|------------|---------------------------------------------------------------------------------------------------------------|-------------------------|
+| sstream  | getTrimmedString | vector of strings | putNumeric | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L25) | getSplitStringOnRecords |
 
 Если изменить isEmptyRemove на false, то можно вернуть пустой элемент вектора
 
@@ -706,14 +708,14 @@ std::vector<std::string> splitStringIntoList(std::string const &str, char const 
 ```c++
 // получить первое слово
 std::string getUserWord(std::string const &msg) {
-    return splitStringIntoList(getUserLineString((msg)), ' ')[0];
+    return splitStringIntoList(putLineString((msg)), ' ')[0];
 }
 
 ```
 </details>
 
 ---
-### `T getUserInput(string const &restrictions = "")`
+### `T putInput(string const &restrictions = "")`
 
 Пользовательский ввод. Позволяет работать в двух режимах: без переданной строки restrictions и со строкой restrictions. 
 
@@ -723,7 +725,7 @@ std::string getUserWord(std::string const &msg) {
 которые будут служить ограничением: т.е. получить возможно будет лишь один символ из restrictions.
 
 ```c++
-template<typename T> T getUserInput(std::string const &restrictions = "") {
+template<typename T> T putInput(std::string const &restrictions = "") {
     T input;
     const char* warning = "Error. Symbol %c not in restrictions: %s.\nRepeat: ";
 
@@ -760,31 +762,30 @@ template<typename T> T getUserInput(std::string const &restrictions = "") {
 
 Есть ещё несколько специфичных параллельных функций:
 
-- `getUserInput` (получить int, double или один символ char в указанном диапазоне)
-- `getUserLineString` (основано на std::getline и позволяет получить строку любой длины),
-- `getUserNumeric` (получение числа в диапазоне)
+- `putLineString` (основано на std::getline и позволяет получить строку любой длины),
+- `putNumeric` (получение числа в диапазоне)
 - `selectFromList` (получить одну из опций)
 
-| includes | depends                           | return | use in | links to use                                                                                                  | prev name   |
-|----------|-----------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|-------------|
-| limits   | isIncludes<br/>getDelimitedString | T      |        | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L29) | getUserChar |
+| includes | depends                           | return | use in | links to use                                                                                                  | prev name                    |
+|----------|-----------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|------------------------------|
+| limits   | isIncludes<br/>getDelimitedString | T      |        | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L29) | getUserChar<br/>getUserInput |
 
 
 Примеры использования:
 
 ```c++
-getUserInput<char>("1456abc"); // получаем лишь символ из строки "1456abc"
+putInput<char>("1456abc"); // получаем лишь символ из строки "1456abc"
 // Для следующего примера есть отдельная функция getUserChoiceFromRange
-int number = (getUserInput<char>("12678") - '0') // получить число в заданном диапазоне (но не более одной единицы)
-getUserInput<char>(); // отработает std::cin и получим первый введенный символ char
-getUserInput<double>(); // получим любое введенное число с точкой-разделителем (вплоть до первой НЕ цифры)
-getUserInput<int>(); // получим любое введенное число (вплоть до первой НЕ цифры)
+int number = (putInput<char>("12678") - '0') // получить число в заданном диапазоне (но не более одной единицы)
+putInput<char>(); // отработает std::cin и получим первый введенный символ char
+putInput<double>(); // получим любое введенное число с точкой-разделителем (вплоть до первой НЕ цифры)
+putInput<int>(); // получим любое введенное число (вплоть до первой НЕ цифры)
 ```
 ```c++
 // Получить цифру в обозначенном диапазоне
 int getUserChoiceFromRange(const std::string &msg, std::string const &range) {
     std::cout << msg << ": ";
-    return (getUserInput<char>(range) - '0');
+    return (putInput<char>(range) - '0');
 }
 ```
 Возможная альтернатива для `selectFromList`:
@@ -811,7 +812,7 @@ int selectFromList(std::vector<std::string> const &list) {
         cout << (isList ? "Выберите одну из опций: " : "Введите команду : ");
         outputListToStream(std::cout, list, (isList ? "|" : ""));
 
-        auto userInput = getUserLineString("Наберите и нажмите enter");
+        auto userInput = putLineString("Наберите и нажмите enter");
         // return index from list, if word found
         for (int i = 0; i < list.size(); ++i) if (list[i] == userInput) return i;
 
@@ -821,11 +822,14 @@ int selectFromList(std::vector<std::string> const &list) {
 ```
 <details><summary>Дополнительные данные</summary>
 
-| includes | depends                                  | return | use in | links to use |
-|----------|------------------------------------------|--------|--------|--------------|
-| limits   | outputListToStream<br/>getUserLineString | int    |        |              |
+| includes | depends                              | return | use in | links to use |
+|----------|--------------------------------------|--------|--------|--------------|
+| limits   | outputListToStream<br/>putLineString | int    |        |              |
 
-Фактически является прототипом меню по действию. В качестве альтернативы можно использовать `getUserInput/hasDialogYesNo`
+Фактически является прототипом меню по действию. В качестве альтернативы можно использовать 
+
+`getMenuItem` - упрощённый аналог для тестирования
+`putInput/hasDialogYesNo`
 
 ```c++
   if (selectFromList({ "yes", "no" }) == 0) {
@@ -839,12 +843,42 @@ auto index = selectFromList({ "add", "edit", "about", "exit" });
 </details>
 
 ---
-### `string getUserLineString(const string &msg)`
+### `int selectMenuItem(vector<string> const &list)`
+
+Требует ввод от пользователя одного из элементов переданного списка. Возвращает индекс выбранного элемента списка.
+
+```c++
+int selectMenuItem(std::vector<std::string> const &list) {
+    while (true) {
+        cout << (list.size() > 1 ? "Выберите одну из опций: " : "Введите команду : ");
+        for (const auto &item : list) cout << item << (item != list[list.size() - 1] ? "|" : "\n");
+
+        while (true) {
+            std::string userInput;
+            std::cout << "Наберите и нажмите enter: ";
+            std::getline(std::cin, userInput);
+
+            for (int i = 0; i < list.size(); ++i)
+                if (list[i] == userInput) return i;
+
+            cout << "Неверно. Попробуйте снова!" << endl;
+        }
+    }
+}
+```
+<details><summary>Дополнительная информация</summary>
+
+Упрощенный вариант (по коду) функции `selectFromList`. Не имеет зависимостей. Удобно использовать для тестирования
+
+</details>
+
+---
+### `string putLineString(const string &msg)`
 
 Пользовательский ввод. На основе `std::getline` получить всю строку до переноса. Конечные пробелы обрезаются. Пустая строка запрещается.
 
 ```c++
-std::string getUserLineString(const std::string &msg) {
+std::string putLineString(const std::string &msg) {
     while (true) {
         std::string userLineString;
         printf("%s: ", msg.c_str());
@@ -865,32 +899,31 @@ std::string getUserLineString(const std::string &msg) {
 
 Есть ещё несколько специфичных параллельных функций:
 
-- `getUserInput` (получить int, double или один символ char в указанном диапазоне)
-- `getUserLineString` (основано на std::getline и позволяет получить строку любой длины),
-- `getUserNumeric` (получение числа в диапазоне)
+- `putInput` (получить int, double или один символ char в указанном диапазоне)
+- `putNumeric` (получение числа в диапазоне)
 
-| includes | depends          | return | use in         | links to use                                                                                                  | prev name                     |
-|----------|------------------|--------|----------------|---------------------------------------------------------------------------------------------------------------|-------------------------------|
-|          | getTrimmedString | string | getUserNumeric | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L42) | getUserWord<br/>getUserString |
+| includes | depends          | return | use in     | links to use                                                                                                  | prev name                                           |
+|----------|------------------|--------|------------|---------------------------------------------------------------------------------------------------------------|-----------------------------------------------------|
+|          | getTrimmedString | string | putNumeric | [20_5_4](https://github.com/VladislavNovak/20_5_4/blob/45e2f0efdb54be265763b2786a89f1d01419fee3/main.cpp#L42) | getUserWord<br/>getUserString<br/>getUserLineString |
 
 Пример использования:
 ```c++
 std::string msg1 = "Введете слово";
 // получить введенные пользователем слова и вычленить лишь первое
-string userInput = splitStringIntoList(getUserLineString(msg1), ' ')[0];
+string userInput = splitStringIntoList(putLineString(msg1), ' ')[0];
 std::string msg2 = "Перечислите слова через запятую";
 // Получить введенный пользователем список в виде вектора
-std::vector<std::string> userInputList = splitStringIntoList(getUserLineString(msg2), ',');
+std::vector<std::string> userInputList = splitStringIntoList(putLineString(msg2), ',');
 ```
 </details>
 
 ---
-### `int getUserNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}) `
+### `int putNumeric(vector<int> const &list = {}, vector<int> const &excludedList = {}) `
 
 Пользовательский ввод целого числа. 
 
 ```c++
-int getUserNumeric(std::vector<int> const &list = {}, std::vector<int> const &excludedList = {}) {
+int putNumeric(std::vector<int> const &list = {}, std::vector<int> const &excludedList = {}) {
 
     bool isRange = (list.size() == 2) && (list[0] < list[1]);
     bool isList = !list.empty() && (list.size() != 2 || ((list.size() == 2) && (list[0] > list[1])));
@@ -899,9 +932,9 @@ int getUserNumeric(std::vector<int> const &list = {}, std::vector<int> const &ex
     while (true) {
         bool isTrouble = false;
         cout << "Введите цифры" << ": ";
-        int userInput = getUserInput<int>();
+        int userInput = putInput<int>();
 
-        vector<string> troubles;
+        vector<std::string> troubles;
 
         if (isRange && (userInput < list[0] || userInput > list[1])) isTrouble = true;
         if (isList && !isIncludes(list, userInput)) isTrouble = true;
@@ -926,9 +959,9 @@ int getUserNumeric(std::vector<int> const &list = {}, std::vector<int> const &ex
 
 <details><summary>Дополнительные данные</summary>
 
-| includes | depends      | return | links to use                                                                                                  |
-|----------|--------------|--------|---------------------------------------------------------------------------------------------------------------|
-|          | getUserInput | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) |
+| includes | depends  | return | links to use                                                                                                  | prevname       |
+|----------|----------|--------|---------------------------------------------------------------------------------------------------------------|----------------|
+|          | putInput | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) | getUserNumeric |
 
 
 Ввести возможно:
@@ -941,33 +974,29 @@ int getUserNumeric(std::vector<int> const &list = {}, std::vector<int> const &ex
 Пример использования:
 
 ```c++
-std::cout << getUserNumeric({2, 3, 7, 6}) << std::endl; // 2||3||7||6
-std::cout << getUserNumeric({2, 6}) << std::endl; // 2 - 6
-std::cout << getUserNumeric({6, 2}) << std::endl; // 6 || 2
-std::cout << getUserNumeric() << std::endl; // any
-std::cout << getUserNumeric({1, 8}, {3,4,5}) << std::endl; // 1,2,6,7,8
+std::cout << putNumeric({2, 3, 7, 6}) << std::endl; // 2||3||7||6
+std::cout << putNumeric({2, 6}) << std::endl; // 2 - 6
+std::cout << putNumeric({6, 2}) << std::endl; // 6 || 2
+std::cout << putNumeric() << std::endl; // any
+std::cout << putNumeric({1, 8}, {3,4,5}) << std::endl; // 1,2,6,7,8
 ```
 Есть ещё несколько специфичных параллельных функций:
 
-- `getUserInput` (получить int, double или один символ char в указанном диапазоне)
-- `getUserLineString` (основано на std::getline и позволяет получить строку любой длины),
-- `getUserNumeric` (получение числа в диапазоне)
-- 
+- `putInput` (получить int, double или один символ char в указанном диапазоне)
+- `putLineString` (основано на std::getline и позволяет получить строку любой длины),
+
 </details>
 
 ---
 ### `void outputListToStream(ostream &out, vector<vector<string>> const &list, const string &delim = ",")`
 
 Печатает данные в указанный поток. Потоком может быть std::cout, а может быть и std::ofstream file. 
-Таким образом, данные можно или вывести на экран, или распечатать в файл. Важно лишь, чтобы данные были массивом строк.
+Таким образом, данные можно или вывести на экран, или распечатать в файл.
 
 ```c++
-void outputListToStream(std::ostream &out, std::vector<std::string> const &list, const std::string &delim = ",") {
-    bool isNumbering = false;
-    for (int i = 0; i < list.size(); ++i)
-        out << (isNumbering ? std::to_string(i) + ": " + list[i] : list[i]) << (i != list.size() - 1 ? delim : "");
-
-    out << std::endl;
+template<typename T>
+void outputListToStream(std::ostream &out, std::vector<T> const &list, const std::string &delim = ",") {
+    for (const auto &item : list) out << item << (item != list[list.size() - 1] ? delim : "\n");
 }
 ```
 <details><summary>Дополнительные данные</summary>
@@ -1328,7 +1357,24 @@ bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source
     return true;
 }
 ```
+---
+### `void eraseEmptyEntriesFromMap(std::map<char, int> &out)`
 
+Позволяет удалить из std::map записи, значения которых равны нулю
+
+```c++
+void eraseEmptyEntriesFromMap(std::map<char, int> &out) {
+    for (auto it = out.begin(), next_it = it; it != out.end(); it = next_it) {
+        ++next_it;
+        if (it->second == 0) out.erase(it);
+    }
+}
+```
+<details><summary>Дополнительно</summary>
+
+Необходимо в будущем добавить template, сделав метод более универсальным
+
+</details>
 
 
 
