@@ -42,7 +42,12 @@
     * [`bool changeEntryInMap(const std::pair<F, S> &entry, std::map<F, S> &target)`](#bool-changeentryinmapconst-stdpairf-s-entry-stdmapf-s-target)
     * [`bool removeEntryFromMap(const F &key, std::map<F, S> &target)`](#bool-removeentryfrommapconst-f-key-stdmapf-s-target)
     * [`bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source)`](#bool-retrievemapvaluebykeys-target-const-f-key-const-stdmapf-s-source)
-    * [`void eraseEmptyEntriesFromMap(std::map<char, int> &out)`](#void-eraseemptyentriesfrommapstdmapchar-int-out)
+    * [`void removeEmptyEntriesFromMap(std::map<char, int> &out)`](#void-removeemptyentriesfrommapstdmapchar-int-out)
+    * [`time_t putTime(char timeType, time_t basisTime)`](#timet-puttimechar-timetype-timet-basistime)
+    * [`bool hasLeapYear(time_t targetDate)`](#bool-hasleapyeartimet-targetdate)
+    * [`int extractDayOfYearFromDate(time_t date)`](#int-extractdayofyearfromdatetimet-date)
+    * [`std::tm convertStringToTime(const string &date)`](#stdtm-convertstringtotimeconst-string-date)
+    * [`bool compareToSortByDay (const time_t baseDate, const time_t comparedDate)`](#bool-comparetosortbyday-const-timet-basedate-const-timet-compareddate)
 <!-- TOC -->
 
 ---
@@ -1358,12 +1363,12 @@ bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source
 }
 ```
 ---
-### `void eraseEmptyEntriesFromMap(std::map<char, int> &out)`
+### `void removeEmptyEntriesFromMap(std::map<char, int> &out)`
 
 Позволяет удалить из std::map записи, значения которых равны нулю
 
 ```c++
-void eraseEmptyEntriesFromMap(std::map<char, int> &out) {
+void removeEmptyEntriesFromMap(std::map<char, int> &out) {
     for (auto it = out.begin(), next_it = it; it != out.end(); it = next_it) {
         ++next_it;
         if (it->second == 0) out.erase(it);
@@ -1376,5 +1381,195 @@ void eraseEmptyEntriesFromMap(std::map<char, int> &out) {
 
 </details>
 
+---
+### `time_t putTime(char timeType, time_t basisTime)`
 
+Пользовательский ввод времени или даты. Тип времени или даты задается в timeType.
+
+```c++
+time_t putTime(char timeType, time_t basisTime) {
+    std::string fmtDate = { '%', timeType };
+
+    std::tm* localTime = localtime(&basisTime);
+    time_t result;
+
+    while(true) {
+        std::cin >> std::get_time(localTime, fmtDate.c_str());
+
+        if (std::cin.fail()) {
+            std::cout << "Неверный формат. Попробуйте снова: ";
+            reloadStream();
+            continue;
+        }
+
+        result = mktime(localTime);
+        if (result < 0) {
+            std::cout << "Дата должна быть не ранее January 1, 1970. Попробуйте снова: ";
+            reloadStream();
+            continue;
+        }
+
+        reloadStream();
+        return mktime(localTime);
+    }
+}
+```
+<details><summary>Дополнительная информация</summary>
+
+Необходимо включить заголовок:
+
+```c++
+#include <ctime>
+```
+Также необходимо использовать вспомогательную функцию для очищения буфера после ввода:
+
+```c++
+void reloadStream() {
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+```
+Пример использования. Позволяет последовательно ввести год, месяц и день:
+
+```c++
+time_t putTimeByFormat(const std::string &format, char delim = '/') {
+    vector<std::string> parts;
+    std::stringstream ss(format);
+    std::string temp;
+
+    while(std::getline(ss, temp, delim)) parts.emplace_back(temp);
+
+    time_t date = time(nullptr);
+
+    for (const auto &dateType : parts) {
+        cout << "Введите " << dateType << ": ";
+        date = putTime(dateType[0], date);
+    }
+
+    return date;
+}
+
+time_t fullBirthDate = putTimeByFormat("YYYY/mm/dd");
+```
+</details>
+
+---
+### `bool hasLeapYear(time_t targetDate)`
+
+Определяет, является ли год високосным
+
+```c++
+bool hasLeapYear(time_t targetDate) {
+    std::tm* local = localtime(&targetDate);
+    int year = local->tm_year + 1900;
+    return ((year % 400 == 0 || year % 100 != 0) && year % 4 == 0);
+}
+```
+
+<details><summary>Дополнительная информация</summary>
+
+Необходимо включить заголовок:
+
+```c++
+#include <ctime>
+```
+</details>
+
+---
+### `int extractDayOfYearFromDate(time_t date)`
+
+Позволяет извлечь день из даты
+
+```c++
+int extractDayOfYearFromDate(time_t date) {
+    std::tm local = *localtime(&date);
+    time_t current = time(nullptr);
+    int corrective{0};
+
+    if (hasLeapYear(date) && !hasLeapYear(current)) corrective -= 1;
+    else if (!hasLeapYear(date) && hasLeapYear(current)) corrective += 1;
+
+    return (local.tm_yday + corrective);
+}
+```
+<details><summary>Дополнительная информация</summary>
+
+Необходимо включить заголовок:
+
+```c++
+#include <ctime>
+```
+Зависит от функции `hasLeapYear`. 
+
+Для большей точности нужно для високосного года добавить проверку: расположена дата до или после 1 марта.
+
+Функция отлично подходит для создания календаря, генерируя ключи в std::map.
+
+</details>
+
+---
+### `std::tm convertStringToTime(const string &date)`
+
+Конвертирует строку в структуру std::tm. 
+
+```c++
+std::tm convertStringToTime(const string &date) {
+    time_t now = time(nullptr);
+    std::tm toParse = *localtime(&now);
+    std::istringstream ss(date);
+    ss >> std::get_time(&toParse, "%a %b %d %H:%M:%S %Y");
+    return toParse;
+}
+```
+
+<details><summary>Дополнительная информация</summary>
+
+Необходимо включить:
+
+```c++
+#include <ctime>
+#include <iomanip>
+```
+Важно, чтобы строка, которая должна быть конвертирована, ранее была создана из времени.
+
+Пример использования:
+
+```c++
+// putTimeByFormat здесь лишь для примера. Это может быть любое время в формате time_t
+time_t fullBirthDate = putTimeByFormat(format);
+string fullBirthDateAsString = std::ctime(&fullBirthDate);
+std::tm parse = convertStringToTime(fullBirthDateAsString);
+printf("%i/%i/%i\n", parse.tm_mday, (parse.tm_mon + 1), (parse.tm_year + 1900));
+```
+
+</details>
+
+---
+### `bool compareToSortByDay (const time_t baseDate, const time_t comparedDate)`
+
+Выступает в качестве компаратора для сортировки дат
+
+```c++
+bool compareToSortByDay (const time_t baseDate, const time_t comparedDate) {
+    std::tm base = *localtime(&baseDate);
+    std::tm compared = *localtime(&comparedDate);
+    cout << "День в году: " << base.tm_yday << endl;
+
+    return (compared.tm_mon == base.tm_mon) ? compared.tm_mday >= base.tm_mday : compared.tm_mon >= base.tm_mon;
+}
+```
+
+<details><summary>Дополнительные данные</summary>
+
+| includes            | depends | return | links to use |
+|---------------------|---------|--------|--------------|
+| ctime<br/>algorithm |         | bool   |              |
+
+Используется в сортировке массива чисел:
+
+```c++
+std::sort(std::begin(listOfBirthdays), std::end(listOfBirthdays), compareToSortByDay)
+```
+
+</details>
 
