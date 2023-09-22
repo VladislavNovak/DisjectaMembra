@@ -1,14 +1,14 @@
 
 <!-- TOC -->
-* [General](#general)
+* [Main](#main)
+  * [Has](#has)
     * [`bool isIncludes(T &range, N &item)`](#bool-isincludest-range-n-item)
     * [`bool hasSubstr(char *origin, char *substr)`](#bool-hassubstrchar-origin-char-substr)
-    * [`int findKeyIndexInVector(T &key, vector<T> &list)`](#int-findkeyindexinvectort-key-vectort-list)
-    * [`bool removeKeyFromVector(T &key, vector<T> &list)`](#bool-removekeyfromvectort-key-vectort-list)
     * [`bool isNumeric(string &str)`](#bool-isnumericstring-str)
     * [`bool isContainsOnlyLetters(string &str)`](#bool-iscontainsonlylettersstring-str)
-    * [`bool isStringADate(string &str, string &cause)`](#bool-isstringadatestring-str-string-cause)
-    * [`bool convertDoubleFromString(string &text, double &out)`](#bool-convertdoublefromstringstring-text-double-out)
+  * [General](#general)
+    * [`int findKeyIndexInVector(T &key, vector<T> &list)`](#int-findkeyindexinvectort-key-vectort-list)
+    * [`bool removeKeyFromVector(T &key, vector<T> &list)`](#bool-removekeyfromvectort-key-vectort-list)
     * [`string getDelimitedString(string &list, char delim)`](#string-getdelimitedstringstring-list-char-delim)
     * [`void removeSymbolFromString(string &readjust, char symbol, int leave)`](#void-removesymbolfromstringstring-readjust-char-symbol-int-leave)
     * [`int getNumberOfDigit(int digit)`](#int-getnumberofdigitint-digit)
@@ -22,9 +22,11 @@
     * [`vector<T> getShuffledCopyOfVectorRange(vector<T> &data, int amount, int firstPos)`](#vectort-getshuffledcopyofvectorrangevectort-data-int-amount-int-firstpos)
     * [`string getTrimmedString(string str, string &whiteSpaces)`](#string-gettrimmedstringstring-str-string-whitespaces)
     * [`vector<string> splitStringIntoList(string &str, char delim)`](#vectorstring-splitstringintoliststring-str-char-delim)
+  * [Convert](#convert)
+    * [`bool convertDoubleFromString(string &text, double &out)`](#bool-convertdoublefromstringstring-text-double-out)
 * [User input](#user-input)
     * [`T putInput(string &restrictions)`](#t-putinputstring-restrictions)
-    * [`string putNumberAsString(int charCount)`](#string-putnumberasstringint-charcount)
+    * [`string putNumberAsString(string &msg, int charCount)`](#string-putnumberasstringstring-msg-int-charcount)
     * [`int selectFromList(vector<string> &list)`](#int-selectfromlistvectorstring-list)
     * [`int selectMenuItem(vector<string> &list)`](#int-selectmenuitemvectorstring-list)
     * [`string putLineString(string &msg)`](#string-putlinestringstring-msg)
@@ -32,7 +34,7 @@
 * [Files and streams](#files-and-streams)
     * [`void outputListToStream(ostream &out, vector<vector<string>> &list, string &delim)`](#void-outputlisttostreamostream-out-vectorvectorstring-list-string-delim)
     * [`bool hasFileExist(char* path)`](#bool-hasfileexistchar-path)
-    * [`writeListToFile(char* path, vector<string> &list, bool isAppMode, string &delim)`](#writelisttofilechar-path-vectorstring-list-bool-isappmode-string-delim)
+    * [`void writeListToFile(char* path, vector<string> &list, bool isAppMode, string &delim)`](#void-writelisttofilechar-path-vectorstring-list-bool-isappmode-string-delim)
     * [`bool readFileToList(char* pathName, vector<string> &list)`](#bool-readfiletolistchar-pathname-vectorstring-list)
     * [`void displayFileToScreen(char* pathName, string &msg)`](#void-displayfiletoscreenchar-pathname-string-msg)
     * [`bool loadStringFromBinaryFile(char* fileName, string &str)`](#bool-loadstringfrombinaryfilechar-filename-string-str)
@@ -41,12 +43,13 @@
     * [`bool readIntoPersonFromBinaryFile(ifstream &fileReader, character &person)`](#bool-readintopersonfrombinaryfileifstream-filereader-character-person)
     * [`void savePersonToBinaryFile(char* path, character &person, bool isAppMode)`](#void-savepersontobinaryfilechar-path-character-person-bool-isappmode)
 * [Map](#map)
-    * [`bool addEntryToMap(std::pair<F, S> &entry, std::map<F, S> &target)`](#bool-addentrytomapstdpairf-s-entry-stdmapf-s-target)
-    * [`bool changeEntryInMap(std::pair<F, S> &entry, std::map<F, S> &target)`](#bool-changeentryinmapstdpairf-s-entry-stdmapf-s-target)
-    * [`bool removeEntryFromMap(F &key, std::map<F, S> &target)`](#bool-removeentryfrommapf-key-stdmapf-s-target)
-    * [`bool retrieveMapValueByKey(S &target, F &key, std::map<F, S> &source)`](#bool-retrievemapvaluebykeys-target-f-key-stdmapf-s-source)
-    * [`void removeEmptyEntriesFromMap(std::map<char, int> &out)`](#void-removeemptyentriesfrommapstdmapchar-int-out)
-* [Ctime](#ctime)
+    * [`bool addEntryToMap(pair<F, S> &entry, map<F, S> &target)`](#bool-addentrytomappairf-s-entry-mapf-s-target)
+    * [`bool changeEntryInMap(pair<F, S> &entry, map<F, S> &target)`](#bool-changeentryinmappairf-s-entry-mapf-s-target)
+    * [`bool removeEntryFromMap(F &key, map<F, S> &target)`](#bool-removeentryfrommapf-key-mapf-s-target)
+    * [`bool retrieveMapValueByKey(S &target, F &key, map<F, S> &source)`](#bool-retrievemapvaluebykeys-target-f-key-mapf-s-source)
+    * [`void removeEmptyEntriesFromMap(map<char, int> &out)`](#void-removeemptyentriesfrommapmapchar-int-out)
+* [Time and Date](#time-and-date)
+    * [`bool isStringADate(string &str, string &cause)`](#bool-isstringadatestring-str-string-cause)
     * [`time_t putTime(char timeType, time_t basisTime)`](#timet-puttimechar-timetype-timet-basistime)
     * [`bool hasLeapYear(time_t targetDate)`](#bool-hasleapyeartimet-targetdate)
     * [`int extractDayOfYearFromDate(time_t date)`](#int-extractdayofyearfromdatetimet-date)
@@ -54,7 +57,9 @@
     * [`bool compareToSortByDay (time_t baseDate, time_t comparedDate)`](#bool-comparetosortbyday-timet-basedate-timet-compareddate)
 <!-- TOC -->
 
-# General
+# Main
+
+## Has
 
 ---
 ### `bool isIncludes(T &range, N &item)`
@@ -108,6 +113,49 @@ bool hasSubstr(const char *origin, const char *substr) {
 | cstring  |         | bool   |        | [17_4_3](https://github.com/VladislavNovak/17_4_3/blob/cb3945debec06f908c99caea271d56654937b5ef/main.cpp#L4C1-L4C1) |
 
 </details>
+
+---
+### `bool isNumeric(string &str)`
+
+Проверяет, является ли строка целым числом
+
+```c++
+bool isNumeric(const std::string &str) {
+    auto it = std::find_if(str.begin(), str.end(), [](const char &c) { return !std::isdigit(c); });
+
+    return (!str.empty() && it == str.end());
+}
+```
+
+<details><summary>Дополнительные данные</summary>
+
+| includes  | depends | return | links to use                                                                                                   |
+|-----------|---------|--------|----------------------------------------------------------------------------------------------------------------|
+| algorithm |         | bool   | [20_5_1](https://github.com/VladislavNovak/20_5_1/blob/ffa6db6840c82b32353f1714d6b7aaca3a6bcad2/main.cpp#L109) |
+
+</details>
+
+---
+### `bool isContainsOnlyLetters(string &str)`
+
+Проверяет, содержит ли строка лишь буквы
+
+```c++
+bool isContainsOnlyLetters(const std::string &str) {
+    auto it = std::find_if(str.begin(), str.end(), [](const char &c) { return !std::isalpha(c); });
+
+    return it == str.end();
+}
+```
+<details><summary>Дополнительные данные</summary>
+
+| includes  | depends | return | links to use                                                                                                  |
+|-----------|---------|--------|---------------------------------------------------------------------------------------------------------------|
+| algorithm |         | bool   | [21_5_1](https://github.com/VladislavNovak/21_5_1/blob/317e26448bf863dc4ce89204c500e0ae82b718d4/main.cpp#L28) |
+
+</details>
+
+## General
 
 ---
 ### `int findKeyIndexInVector(T &key, vector<T> &list)`
@@ -182,129 +230,6 @@ removeCommand("exit", commands); // "edit"
 
 removeKeyFromVector(2, range); // 5, 4
 ```
-
-</details>
-
----
-### `bool isNumeric(string &str)`
-
-Проверяет, является ли строка целым числом
-
-```c++
-bool isNumeric(const std::string &str) {
-    auto it = std::find_if(str.begin(), str.end(), [](const char &c) { return !std::isdigit(c); });
-
-    return (!str.empty() && it == str.end());
-}
-```
-
-<details><summary>Дополнительные данные</summary>
-
-| includes  | depends | return | links to use                                                                                                   |
-|-----------|---------|--------|----------------------------------------------------------------------------------------------------------------|
-| algorithm |         | bool   | [20_5_1](https://github.com/VladislavNovak/20_5_1/blob/ffa6db6840c82b32353f1714d6b7aaca3a6bcad2/main.cpp#L109) |
-
-</details>
-
----
-### `bool isContainsOnlyLetters(string &str)`
-
-Проверяет, содержит ли строка лишь буквы
-
-```c++
-bool isContainsOnlyLetters(const std::string &str) {
-    auto it = std::find_if(str.begin(), str.end(), [](const char &c) { return !std::isalpha(c); });
-
-    return it == str.end();
-}
-```
-<details><summary>Дополнительные данные</summary>
-
-| includes  | depends | return | links to use                                                                                                  |
-|-----------|---------|--------|---------------------------------------------------------------------------------------------------------------|
-| algorithm |         | bool   | [21_5_1](https://github.com/VladislavNovak/21_5_1/blob/317e26448bf863dc4ce89204c500e0ae82b718d4/main.cpp#L28) |
-
-</details>
-
----
-### `bool isStringADate(string &str, string &cause)`
-
-Проверяет - является ли строка датой. 
-Вторым аргументом передается строка, которая возвращает аккумулированный список ошибок, если они случились.
-
-```c++
-bool isStringADate(const std::string &str, std::string &cause) {
-    bool isValid = true;
-    std::vector<std::vector<int>> ranges = { { 1, 31 }, { 1, 12 }, { 1950, 2030 } };
-    std::vector<std::string> parts = splitStringIntoList(str, '.', false);
-
-    if (parts.size() != 3) {
-        cause += "Формат ввода: ДД.ММ.ГГГГ\n";
-        isValid = false;
-    }
-
-    for (int i = 0; i < parts.size(); ++i) {
-        std::string current = parts[i];
-
-        if (!isNumeric(current)) {
-            char warning[100];
-            sprintf(warning, "%i часть (%s) не является цифрой\n", (i + 1), current.c_str());
-            cause += warning;
-            isValid = false;
-            continue;
-        }
-
-        int part = std::stoi(current);
-        auto range = ranges[i];
-
-        if (part < range[0] || part > range[1]) {
-            char warning[100];
-            sprintf(warning, "%i часть (%i) должна быть в диапазоне %i - %i\n", (i + 1), part, range[0], range[1]);
-            cause += warning;
-            isValid = false;
-        }
-    }
-
-    return isValid;
-}
-```
-
-<details><summary>Дополнительные данные</summary>
-
-Данная функция пока узко специализирована и, несмотря на то, что выполняет задачу проверки строки, требует доработки. 
-Однако она вполне рабочая и может служить общим шаблоном для решения подобных задач.
-
-| includes | depends                                                | return | links to use                                                                                                   | prev name |
-|----------|--------------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------|-----------|
-|          | isNumeric<br/>getTrimmedString<br/>splitStringIntoList | bool   | [20_5_1](https://github.com/VladislavNovak/20_5_1/blob/ffa6db6840c82b32353f1714d6b7aaca3a6bcad2/main.cpp#L118) | isDate    |
-
-</details>
-
----
-### `bool convertDoubleFromString(string &text, double &out)`
-
-Преобразует строку в double. Если удалось, то возвращается true
-
-```c++
-bool convertDoubleFromString(const std::string &str, double &out) {
-    try { out = std::stod(str); }
-    catch (std::invalid_argument &err) {
-        out = 0;
-        std::cerr << err.what() << endl;
-        return false;
-    }
-
-    return true;
-}
-```
-
-<details><summary>Дополнительные данные</summary>
-
-Можно было бы использовать strtod(str.c_str(), nullptr), который не выбрасывает исключение.
-
-| includes | depends | return | links to use                                                                                                      | prev name      |
-|----------|---------|--------|-------------------------------------------------------------------------------------------------------------------|----------------|
-|          |         | bool   | [16_6_3_1](https://github.com/VladislavNovak/16_6_3_1/blob/f69c866eb4378c4947e2fdd413b22f253de362dc/main.cpp#L99) | stringToDouble |
 
 </details>
 
@@ -698,6 +623,36 @@ std::string getUserWord(std::string const &msg) {
 ```
 </details>
 
+## Convert
+
+---
+### `bool convertDoubleFromString(string &text, double &out)`
+
+Преобразует строку в double. Если удалось, то возвращается true
+
+```c++
+bool convertDoubleFromString(const std::string &str, double &out) {
+    try { out = std::stod(str); }
+    catch (std::invalid_argument &err) {
+        out = 0;
+        std::cerr << err.what() << endl;
+        return false;
+    }
+
+    return true;
+}
+```
+
+<details><summary>Дополнительные данные</summary>
+
+Можно было бы использовать strtod(str.c_str(), nullptr), который не выбрасывает исключение.
+
+| includes | depends | return | links to use                                                                                                      | prev name      |
+|----------|---------|--------|-------------------------------------------------------------------------------------------------------------------|----------------|
+|          |         | bool   | [16_6_3_1](https://github.com/VladislavNovak/16_6_3_1/blob/f69c866eb4378c4947e2fdd413b22f253de362dc/main.cpp#L99) | stringToDouble |
+
+</details>
+
 # User input
 
 ---
@@ -816,16 +771,15 @@ bool hasDialogYesNo(const std::string &msg) {
 </details>
 
 ---
-### `string putNumberAsString(int charCount)`
+### `string putNumberAsString(string &msg, int charCount)`
 
 Позволяет получить строку состоящую из цифр. Как пример: телефон. Можно передать длину результирующей строки
 
 ```c++
-std::string putNumberAsString(int charCount = 1) {
+std::string putNumberAsString(const std::string &msg, int charCount = 1) {
+    printf("%s (%i digits): ", msg.c_str(), charCount);
     string input;
-    std::cout << "Enter " << charCount << " numbers:";
-    while ((charCount--) > 0)
-        input += putChar(charCount == 0);
+    while ((charCount--) > 0) { input += putChar(charCount == 0, input); }
 
     return input;
 }
@@ -834,7 +788,7 @@ std::string putNumberAsString(int charCount = 1) {
 <details>
 <summary><span style="color:tomato;font-size: 12px">Дополнительно</span></summary>
 
-Основывается на аналоге putInput - putChar:
+Основывается на аналоге `putInput` - `putChar`:
 
 ```c++
 void resetBuffer() {
@@ -842,7 +796,7 @@ void resetBuffer() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-char putChar(bool isEnd) {
+char putChar(bool isEnd, const std::string &current) {
     const std::string &allowedList = "0123456789";
     char input;
 
@@ -851,7 +805,7 @@ char putChar(bool isEnd) {
 
         if (std::cin.fail() || (allowedList.length() && !isIncludes(allowedList, input))) {
             resetBuffer();
-            std::cout << "Input is invalid. Please try again: ";
+            std::cout << "Now in buffer: " << current << ". Current char invalid. Try again:";
             continue;
         }
         break;
@@ -866,8 +820,19 @@ char putChar(bool isEnd) {
 
 - `putChar` является аналогом `putInput`
 - аргумент `isEnd` сигнализирует о том, что введен последний символ и сбрасывает буфер
+- аргумент `current` содержит информацию об уже введенных символах
 - `allowedList` - это список разрешенных символов. В данном случае это только цифры
 - одна зависимость: [isIncludes](#bool-isincludesconst-t-range-const-n-item)
+
+Пример:
+
+```c++
+auto phone = putNumberAsString("Enter phone", 10);
+```
+
+Подумать:
+
+Если передано значение -1, то можно вводить любое количество символов (сейчас - жёстко заданное).
 
 </details>
 
@@ -951,14 +916,13 @@ int selectMenuItem(const std::vector<std::string> &list) {
 
 ```c++
 std::string putLineString(const std::string &msg) {
+    printf("%s: ", msg.c_str());
     while (true) {
         std::string userLineString;
-        printf("%s: ", msg.c_str());
         std::getline(std::cin, userLineString);
 
-        userLineString = getTrimmedString(userLineString);
         if (userLineString.empty()) {
-            std::cout << "Строка не может быть пустой. Попробуйте снова!" << std::endl;
+            std::cout << "The string cannot be empty. Try again:";
             continue;
         }
 
@@ -1122,7 +1086,7 @@ bool hasFileExist(const char* path) {
 
 
 ---
-### `writeListToFile(char* path, vector<string> &list, bool isAppMode, string &delim)`
+### `void writeListToFile(char* path, vector<string> &list, bool isAppMode, string &delim)`
 
 Запись в файл. Печатает вектор в файл
 
@@ -1394,7 +1358,7 @@ struct character { string name; int salary; };
 # Map
 
 ---
-### `bool addEntryToMap(std::pair<F, S> &entry, std::map<F, S> &target)`
+### `bool addEntryToMap(pair<F, S> &entry, map<F, S> &target)`
 
 Добавить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
 
@@ -1410,7 +1374,7 @@ bool addEntryToMap(const std::pair<F, S> &entry, std::map<F, S> &target) {
 ```
 
 ---
-### `bool changeEntryInMap(std::pair<F, S> &entry, std::map<F, S> &target)`
+### `bool changeEntryInMap(pair<F, S> &entry, map<F, S> &target)`
 
 Изменить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
 
@@ -1427,7 +1391,7 @@ bool changeEntryInMap(const std::pair<F, S> &entry, std::map<F, S> &target) {
 ```
 
 ---
-### `bool removeEntryFromMap(F &key, std::map<F, S> &target)`
+### `bool removeEntryFromMap(F &key, map<F, S> &target)`
 
 Удалить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
 
@@ -1445,7 +1409,7 @@ bool removeEntryFromMap(const F &key, std::map<F, S> &target) {
 ```
 
 ---
-### `bool retrieveMapValueByKey(S &target, F &key, std::map<F, S> &source)`
+### `bool retrieveMapValueByKey(S &target, F &key, map<F, S> &source)`
 
 Вернуть одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
 
@@ -1462,7 +1426,7 @@ bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source
 }
 ```
 ---
-### `void removeEmptyEntriesFromMap(std::map<char, int> &out)`
+### `void removeEmptyEntriesFromMap(map<char, int> &out)`
 
 Позволяет удалить из std::map записи, значения которых равны нулю
 
@@ -1480,7 +1444,61 @@ void removeEmptyEntriesFromMap(std::map<char, int> &out) {
 
 </details>
 
-# Ctime
+# Time and Date
+
+---
+### `bool isStringADate(string &str, string &cause)`
+
+Проверяет - является ли строка датой.
+Вторым аргументом передается строка, которая возвращает аккумулированный список ошибок, если они случились.
+
+```c++
+bool isStringADate(const std::string &str, std::string &cause) {
+    bool isValid = true;
+    std::vector<std::vector<int>> ranges = { { 1, 31 }, { 1, 12 }, { 1950, 2030 } };
+    std::vector<std::string> parts = splitStringIntoList(str, '.', false);
+
+    if (parts.size() != 3) {
+        cause += "Формат ввода: ДД.ММ.ГГГГ\n";
+        isValid = false;
+    }
+
+    for (int i = 0; i < parts.size(); ++i) {
+        std::string current = parts[i];
+
+        if (!isNumeric(current)) {
+            char warning[100];
+            sprintf(warning, "%i часть (%s) не является цифрой\n", (i + 1), current.c_str());
+            cause += warning;
+            isValid = false;
+            continue;
+        }
+
+        int part = std::stoi(current);
+        auto range = ranges[i];
+
+        if (part < range[0] || part > range[1]) {
+            char warning[100];
+            sprintf(warning, "%i часть (%i) должна быть в диапазоне %i - %i\n", (i + 1), part, range[0], range[1]);
+            cause += warning;
+            isValid = false;
+        }
+    }
+
+    return isValid;
+}
+```
+
+<details><summary>Дополнительные данные</summary>
+
+Данная функция пока узко специализирована и, несмотря на то, что выполняет задачу проверки строки, требует доработки.
+Однако она вполне рабочая и может служить общим шаблоном для решения подобных задач.
+
+| includes | depends                                                | return | links to use                                                                                                   | prev name |
+|----------|--------------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------|-----------|
+|          | isNumeric<br/>getTrimmedString<br/>splitStringIntoList | bool   | [20_5_1](https://github.com/VladislavNovak/20_5_1/blob/ffa6db6840c82b32353f1714d6b7aaca3a6bcad2/main.cpp#L118) | isDate    |
+
+</details>
 
 ---
 ### `time_t putTime(char timeType, time_t basisTime)`
