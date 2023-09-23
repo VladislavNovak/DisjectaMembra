@@ -2,59 +2,58 @@
 <!-- TOC -->
 * [Main](#main)
   * [Has](#has)
-    * [`bool isIncludes(T &range, N &item)`](#bool-isincludest-range-n-item)
-    * [`bool hasSubstr(char *origin, char *substr)`](#bool-hassubstrchar-origin-char-substr)
-    * [`bool isNumeric(string &str)`](#bool-isnumericstring-str)
-    * [`bool isContainsOnlyLetters(string &str)`](#bool-iscontainsonlylettersstring-str)
+    * [`bool isIncludes`](#bool-isincludes)
+    * [`bool hasSubstr`](#bool-hassubstr)
+    * [`bool isNumeric`](#bool-isnumeric)
+    * [`bool isContainsOnlyLetters`](#bool-iscontainsonlyletters)
   * [General](#general)
-    * [`int findKeyIndexInVector(T &key, vector<T> &list)`](#int-findkeyindexinvectort-key-vectort-list)
-    * [`bool removeKeyFromVector(T &key, vector<T> &list)`](#bool-removekeyfromvectort-key-vectort-list)
-    * [`string getDelimitedString(string &list, char delim)`](#string-getdelimitedstringstring-list-char-delim)
-    * [`void removeSymbolFromString(string &readjust, char symbol, int leave)`](#void-removesymbolfromstringstring-readjust-char-symbol-int-leave)
-    * [`int getNumberOfDigit(int digit)`](#int-getnumberofdigitint-digit)
-    * [`int getRoundedIntWithStep(int val, int step)`](#int-getroundedintwithstepint-val-int-step)
-    * [`void flipArray (int (&arr)[T])`](#void-fliparray-int-arrt)
-    * [`int getRandomIntInRange(int from, int to)`](#int-getrandomintinrangeint-from-int-to)
-    * [`int getAvailableIndexInRange(vector<int> &range)`](#int-getavailableindexinrangevectorint-range)
-    * [`vector<N> removeIntersections(vector<N> &list, vector<N> &intersection)`](#vectorn-removeintersectionsvectorn-list-vectorn-intersection)
-    * [`vector<T> getShuffleVector(vector<T> &data)`](#vectort-getshufflevectorvectort-data)
-    * [`vector<T> getCopyVector(vector<T> &data, int amount, int firstPos)`](#vectort-getcopyvectorvectort-data-int-amount-int-firstpos)
-    * [`vector<T> getShuffledCopyOfVectorRange(vector<T> &data, int amount, int firstPos)`](#vectort-getshuffledcopyofvectorrangevectort-data-int-amount-int-firstpos)
-    * [`string getTrimmedString(string str, string &whiteSpaces)`](#string-gettrimmedstringstring-str-string-whitespaces)
-    * [`vector<string> splitStringIntoList(string &str, char delim)`](#vectorstring-splitstringintoliststring-str-char-delim)
+    * [`int findKeyIndexInVector`](#int-findkeyindexinvector)
+    * [`bool removeKeyFromVector`](#bool-removekeyfromvector)
+    * [`string getDelimitedString`](#string-getdelimitedstring)
+    * [`void removeSymbolFromString`](#void-removesymbolfromstring)
+    * [`int getNumberOfDigit`](#int-getnumberofdigit)
+    * [`int getRoundedIntWithStep`](#int-getroundedintwithstep)
+    * [`void flipArray`](#void-fliparray)
+    * [`int getRandomIntInRange`](#int-getrandomintinrange)
+    * [`int getAvailableIndexInRange`](#int-getavailableindexinrange)
+    * [`vector<N> removeIntersections`](#vectorn-removeintersections)
+    * [`vector<T> getShuffleVector`](#vectort-getshufflevector)
+    * [`vector<T> getCopyVector`](#vectort-getcopyvector)
+    * [`vector<T> getShuffledCopyOfVectorRange`](#vectort-getshuffledcopyofvectorrange)
+    * [`string getTrimmedString`](#string-gettrimmedstring)
+    * [`vector<string> splitStringIntoList`](#vectorstring-splitstringintolist)
   * [Convert](#convert)
-    * [`bool convertDoubleFromString(string &text, double &out)`](#bool-convertdoublefromstringstring-text-double-out)
+    * [`bool convertDoubleFromString`](#bool-convertdoublefromstring)
 * [User input](#user-input)
-    * [`T putInput(string &restrictions)`](#t-putinputstring-restrictions)
-    * [`string putNumberAsString(string &msg, int charCount)`](#string-putnumberasstringstring-msg-int-charcount)
-    * [`int selectFromList(vector<string> &list)`](#int-selectfromlistvectorstring-list)
-    * [`int selectMenuItem(vector<string> &list)`](#int-selectmenuitemvectorstring-list)
-    * [`string putLineString(string &msg)`](#string-putlinestringstring-msg)
-    * [`int putNumeric(vector<int> &list, vector<int> &excludedList)`](#int-putnumericvectorint-list-vectorint-excludedlist)
+    * [`T putInput`](#t-putinput)
+    * [`string putNumberAsString`](#string-putnumberasstring)
+    * [`int selectMenuItem`](#int-selectmenuitem)
+    * [`string putLineString`](#string-putlinestring)
+    * [`int putNumeric`](#int-putnumeric)
 * [Files and streams](#files-and-streams)
-    * [`void outputListToStream(ostream &out, vector<vector<string>> &list, string &delim)`](#void-outputlisttostreamostream-out-vectorvectorstring-list-string-delim)
-    * [`bool hasFileExist(char* path)`](#bool-hasfileexistchar-path)
-    * [`void writeListToFile(char* path, vector<string> &list, bool isAppMode, string &delim)`](#void-writelisttofilechar-path-vectorstring-list-bool-isappmode-string-delim)
-    * [`bool readFileToList(char* pathName, vector<string> &list)`](#bool-readfiletolistchar-pathname-vectorstring-list)
-    * [`void displayFileToScreen(char* pathName, string &msg)`](#void-displayfiletoscreenchar-pathname-string-msg)
-    * [`bool loadStringFromBinaryFile(char* fileName, string &str)`](#bool-loadstringfrombinaryfilechar-filename-string-str)
-    * [`void saveStringToBinaryFile(char* path, string &str, bool isAppMode, char delim)`](#void-savestringtobinaryfilechar-path-string-str-bool-isappmode-char-delim)
-    * [`bool loadIntoArrFromBinaryFile(char* path, vector<T> &arr)`](#bool-loadintoarrfrombinaryfilechar-path-vectort-arr)
-    * [`bool readIntoPersonFromBinaryFile(ifstream &fileReader, character &person)`](#bool-readintopersonfrombinaryfileifstream-filereader-character-person)
-    * [`void savePersonToBinaryFile(char* path, character &person, bool isAppMode)`](#void-savepersontobinaryfilechar-path-character-person-bool-isappmode)
+    * [`void outputListToStream`](#void-outputlisttostream)
+    * [`bool hasFileExist`](#bool-hasfileexist)
+    * [`void writeListToFile`](#void-writelisttofile)
+    * [`bool readFileToList`](#bool-readfiletolist)
+    * [`void displayFileToScreen`](#void-displayfiletoscreen)
+    * [`bool loadStringFromBinaryFile`](#bool-loadstringfrombinaryfile)
+    * [`void saveStringToBinaryFile`](#void-savestringtobinaryfile)
+    * [`bool loadIntoArrFromBinaryFile`](#bool-loadintoarrfrombinaryfile)
+    * [`bool readIntoPersonFromBinaryFile`](#bool-readintopersonfrombinaryfile)
+    * [`void savePersonToBinaryFile`](#void-savepersontobinaryfile)
 * [Map](#map)
-    * [`bool addEntryToMap(pair<F, S> &entry, map<F, S> &target)`](#bool-addentrytomappairf-s-entry-mapf-s-target)
-    * [`bool changeEntryInMap(pair<F, S> &entry, map<F, S> &target)`](#bool-changeentryinmappairf-s-entry-mapf-s-target)
-    * [`bool removeEntryFromMap(F &key, map<F, S> &target)`](#bool-removeentryfrommapf-key-mapf-s-target)
-    * [`bool retrieveMapValueByKey(S &target, F &key, map<F, S> &source)`](#bool-retrievemapvaluebykeys-target-f-key-mapf-s-source)
-    * [`void removeEmptyEntriesFromMap(map<char, int> &out)`](#void-removeemptyentriesfrommapmapchar-int-out)
+    * [`bool addEntryToMap`](#bool-addentrytomap)
+    * [`bool changeEntryInMap`](#bool-changeentryinmap)
+    * [`bool removeEntryFromMap`](#bool-removeentryfrommap)
+    * [`bool retrieveMapValueByKey`](#bool-retrievemapvaluebykey)
+    * [`void removeEmptyEntriesFromMap`](#void-removeemptyentriesfrommap)
 * [Time and Date](#time-and-date)
-    * [`bool isStringADate(string &str, string &cause)`](#bool-isstringadatestring-str-string-cause)
-    * [`time_t putTime(char timeType, time_t basisTime)`](#timet-puttimechar-timetype-timet-basistime)
-    * [`bool hasLeapYear(time_t targetDate)`](#bool-hasleapyeartimet-targetdate)
-    * [`int extractDayOfYearFromDate(time_t date)`](#int-extractdayofyearfromdatetimet-date)
-    * [`std::tm convertStringToTime(string &date)`](#stdtm-convertstringtotimestring-date)
-    * [`bool compareToSortByDay (time_t baseDate, time_t comparedDate)`](#bool-comparetosortbyday-timet-basedate-timet-compareddate)
+    * [`bool isStringADate`](#bool-isstringadate)
+    * [`time_t putTime`](#timet-puttime)
+    * [`bool hasLeapYear`](#bool-hasleapyear)
+    * [`int extractDayOfYearFromDate`](#int-extractdayofyearfromdate)
+    * [`std::tm convertStringToTime`](#stdtm-convertstringtotime)
+    * [`bool compareToSortByDay`](#bool-comparetosortbyday)
 <!-- TOC -->
 
 # Main
@@ -62,7 +61,7 @@
 ## Has
 
 ---
-### `bool isIncludes(T &range, N &item)`
+### `bool isIncludes`
 
 Проверяет, встречается ли item хоть раз встречается в диапазоне.
 
@@ -94,7 +93,7 @@ std::cout << isIncludes(rangeString, 'a') << std::endl; // 0
 </details>
 
 ---
-### `bool hasSubstr(char *origin, char *substr)`
+### `bool hasSubstr`
 
 Проверяет строку на вхождение подстроки
 
@@ -115,7 +114,7 @@ bool hasSubstr(const char *origin, const char *substr) {
 </details>
 
 ---
-### `bool isNumeric(string &str)`
+### `bool isNumeric`
 
 Проверяет, является ли строка целым числом
 
@@ -136,7 +135,7 @@ bool isNumeric(const std::string &str) {
 </details>
 
 ---
-### `bool isContainsOnlyLetters(string &str)`
+### `bool isContainsOnlyLetters`
 
 Проверяет, содержит ли строка лишь буквы
 
@@ -158,7 +157,7 @@ bool isContainsOnlyLetters(const std::string &str) {
 ## General
 
 ---
-### `int findKeyIndexInVector(T &key, vector<T> &list)`
+### `int findKeyIndexInVector`
 
 Поиск key в vector. В случае успеха, возвращает позицию. Если ничего не найдено, возвращается -1
 
@@ -191,13 +190,13 @@ if (result != 1) std::cout << result << std::endl;
 </details>
 
 --- 
-### `bool removeKeyFromVector(T &key, vector<T> &list)`
+### `bool removeKeyFromVector`
 
 Позволяет удалить позицию из вектора по переданному ключу. Возвращает true, если удаление прошло успешно
 
 ```c++
 template<typename T>
-bool removeKeyFromVector(const T &key, vector<T> &list) {
+bool removeKeyFromVector(const T &key, std::vector<T> &list) {
     auto foundIndex = findKeyIndexInVector(key, list);
     if (foundIndex == -1) return false;
 
@@ -234,7 +233,7 @@ removeKeyFromVector(2, range); // 5, 4
 </details>
 
 ---
-### `string getDelimitedString(string &list, char delim)`
+### `string getDelimitedString`
 
 Возвращает новую строку со знаками, разделенными аргументом delim 
 
@@ -252,9 +251,9 @@ std::string getDelimitedString(const T &list, const char delim = ',') {
 ```
 <details><summary>Дополнительные данные</summary>
 
-| includes | depends | return | use in   | links to use                                                                                                  | prev name    |
-|----------|---------|--------|----------|---------------------------------------------------------------------------------------------------------------|--------------|
-|          |         | string | putInput | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L19) | getJoinRange |
+| includes | return | use in   | prev name    |
+|----------|--------|----------|--------------|
+|          | string | putInput | getJoinRange |
 
 </details>
 
@@ -269,7 +268,7 @@ getDelimitedString(someThingRange); // "2,4,5"
 ```
 
 ---
-### `void removeSymbolFromString(string &readjust, char symbol, int leave)`
+### `void removeSymbolFromString`
 
 Удалить из переданной строки все упоминания указанного символа. 
 Дополнительно в leave можно указать количество символов, которое не нужно удалять.
@@ -315,7 +314,7 @@ std::string getRemoveDotsString(const string &str) {
 </details>
 
 ---
-### `int getNumberOfDigit(int digit)`
+### `int getNumberOfDigit`
 
 Получаем количество разрядов в int
 
@@ -338,7 +337,7 @@ int getNumberOfDigit(int digit) {
 </details>
 
 ---
-### `int getRoundedIntWithStep(int val, int step)`
+### `int getRoundedIntWithStep`
 
 Округляет целое до заданных десятков
 
@@ -356,7 +355,7 @@ int getRoundedIntWithStep(int val, int step = 10) {
 </details>
 
 ---
-### `void flipArray (int (&arr)[T])`
+### `void flipArray`
 
 Перевернуть (на месте) массив типа int arr[] = { 0, 1, 2 };
 
@@ -379,7 +378,7 @@ void flipArray (int (&arr)[T]) {
 </details>
 
 ---
-### `int getRandomIntInRange(int from, int to)`
+### `int getRandomIntInRange`
 
 Получить случайное целое в диапазоне (с учётом верхней границы). 
 
@@ -404,7 +403,7 @@ std::srand(std::time(nullptr)); // NOLINT(cert-msc51-cpp)
 </details>
 
 ---
-### `int getAvailableIndexInRange(vector<int> &range)`
+### `int getAvailableIndexInRange`
 
 Получить первый пропущенный индекс в массиве. Либо новый (т.е. последний + 1)
 
@@ -435,7 +434,7 @@ getAvailableIndexInRange({ 0, 1, 2, 3 }) // 4
 </details>
 
 ---
-### `vector<N> removeIntersections(vector<N> &list, vector<N> &intersection)`
+### `vector<N> removeIntersections`
 
 Возвращает результат вычета из первого переданного вектора второго
 
@@ -478,7 +477,7 @@ auto results2 = removeIntersections(listInt, intersectionsInt); // 3,4,3,6,7
 </details>
 
 ---
-### `vector<T> getShuffleVector(vector<T> &data)`
+### `vector<T> getShuffleVector`
 
 Перемешивает копию vector. Возвращает новый перемешанный вектор
 
@@ -504,7 +503,7 @@ std::vector<T> getShuffleVector(const std::vector<T> &data) {
 </details>
 
 ---
-### `vector<T> getCopyVector(vector<T> &data, int amount, int firstPos)`
+### `vector<T> getCopyVector`
 
 Копирует vector. Возвращает или полную копию, или, если указан размер (amount) и/или 
 позиция, с которой нужно копировать (firstPos), диапазон
@@ -531,7 +530,7 @@ std::vector<T> getCopyVector(const std::vector<T> &data, int amount = 0, int fir
 </details>
 
 ---
-### `vector<T> getShuffledCopyOfVectorRange(vector<T> &data, int amount, int firstPos)`
+### `vector<T> getShuffledCopyOfVectorRange`
 
 Перемешивает копию vector. Возвращает диапазон перемешанного вектора. 
 Является обёрткой для getShuffleVector для получения диапазона
@@ -555,7 +554,7 @@ std::vector<T> getShuffledCopyOfVectorRange(const std::vector<T> &data, int amou
 </details>
 
 ---
-### `string getTrimmedString(string str, string &whiteSpaces)`
+### `string getTrimmedString`
 
 Обрезает строку. Возвращает строку с удаленными конечными пробелами
 
@@ -579,7 +578,7 @@ std::string getTrimmedString(std::string str, const std::string &whiteSpaces = "
 </details>
 
 ---
-### `vector<string> splitStringIntoList(string &str, char delim)`
+### `vector<string> splitStringIntoList`
 
 Разбивает строку на подстроки.
 
@@ -626,7 +625,7 @@ std::string getUserWord(std::string const &msg) {
 ## Convert
 
 ---
-### `bool convertDoubleFromString(string &text, double &out)`
+### `bool convertDoubleFromString`
 
 Преобразует строку в double. Если удалось, то возвращается true
 
@@ -656,7 +655,7 @@ bool convertDoubleFromString(const std::string &str, double &out) {
 # User input
 
 ---
-### `T putInput(string &restrictions)`
+### `T putInput`
 
 Пользовательский ввод. Позволяет работать в двух режимах: без переданной строки restrictions и со строкой restrictions. 
 
@@ -735,7 +734,7 @@ double putInput() {
 - `putChar` + `putNumberAsString` (позволяет получить строку состоящую из цифр)
 - `putLineString` (основано на std::getline и позволяет получить строку любой длины),
 - `putNumeric` (получение числа в диапазоне)
-- `selectFromList` (получить одну из опций)
+- `selectMenuItem` (получить одну из опций)
 
 | includes | depends                           | return | use in | links to use                                                                                                  | prev name                    |
 |----------|-----------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|------------------------------|
@@ -759,7 +758,7 @@ int getUserChoiceFromRange(const std::string &msg, std::string const &range) {
     return (putInput<char>(range) - '0');
 }
 ```
-Возможная альтернатива для `selectFromList`:
+Возможная альтернатива для `selectMenuItem`:
 
 ```c++
 // Возвращает true при введении Y/y или false при N/n. Другие символы запрещены
@@ -771,7 +770,7 @@ bool hasDialogYesNo(const std::string &msg) {
 </details>
 
 ---
-### `string putNumberAsString(string &msg, int charCount)`
+### `string putNumberAsString`
 
 Позволяет получить строку состоящую из цифр. Как пример: телефон. Можно передать длину результирующей строки
 
@@ -837,80 +836,51 @@ auto phone = putNumberAsString("Enter phone", 10);
 </details>
 
 ---
-### `int selectFromList(vector<string> &list)`
 
-Требует ввод от пользователя одного из элементов переданного списка. Возвращает индекс выбранного элемента списка
-
-```c++
-int selectFromList(const std::vector<std::string> &list) {
-    bool isList = list.size() > 1;
-
-    while (true) {
-        cout << (isList ? "Выберите одну из опций: " : "Введите команду : ");
-        outputListToStream(std::cout, list, (isList ? "|" : ""));
-
-        auto userInput = putLineString("Наберите и нажмите enter");
-        // return index from list, if word found
-        for (int i = 0; i < list.size(); ++i) if (list[i] == userInput) return i;
-
-        cout << "Неверно. Попробуйте снова!" << endl;
-    }
-}
-```
-<details><summary>Дополнительные данные</summary>
-
-| includes | depends                              | return | use in | links to use |
-|----------|--------------------------------------|--------|--------|--------------|
-| limits   | outputListToStream<br/>putLineString | int    |        |              |
-
-Фактически является прототипом меню по действию. В качестве альтернативы можно использовать 
-
-`getMenuItem` - упрощённый аналог для тестирования
-`putInput/hasDialogYesNo`
-
-```c++
-  if (selectFromList({ "yes", "no" }) == 0) {
-    // Действие
-  }
-```
-```c++
-auto index = selectFromList({ "add", "edit", "about", "exit" });
-// Далее - switch case по номерам
-```
-</details>
-
----
-### `int selectMenuItem(vector<string> &list)`
+### `int selectMenuItem`
 
 Требует ввод от пользователя одного из элементов переданного списка. Возвращает индекс выбранного элемента списка.
 
 ```c++
-int selectMenuItem(const std::vector<std::string> &list) {
+int selectMenuItem(const std::vector<std::string> &list, const std::string &msg = "Select from") {
+    string commands;
+    for (const auto &item : list)
+        commands += (item + (item != list[list.size() - 1] ? "|" : ""));
+
+    printf("%s enter (%s):", msg.c_str(), commands.c_str());
     while (true) {
-        std::cout << (list.size() > 1 ? "Выберите одну из опций: " : "Введите команду : ");
-        for (const auto &item : list) std::cout << item << (item != list[list.size() - 1] ? "|" : "\n");
+        std::string userInput;
+        std::getline(std::cin, userInput);
 
-        while (true) {
-            std::string userInput;
-            std::cout << "Наберите и нажмите enter: ";
-            std::getline(std::cin, userInput);
+        for (int i = 0; i < list.size(); ++i)
+            if (list[i] == userInput) return i;
 
-            for (int i = 0; i < list.size(); ++i)
-                if (list[i] == userInput) return i;
-
-            std::cout << "Неверно. Попробуйте снова!" << std::endl;
-        }
+        std::cout << "Error. Try again:";
     }
 }
 ```
 <details><summary>Дополнительная информация</summary>
 
-Упрощенный вариант (по коду) функции `selectFromList`. Не имеет зависимостей. Удобно использовать для тестирования
+Примеры: 
+
+```c++
+  if (selectMenuItem({ "yes", "no" }) == 0) {
+    // Действие
+  }
+```
+```c++
+auto index = selectMenuItem({ "add", "edit", "about", "exit" });
+// Далее - switch case по номерам
+```
+
+Альтернатива:
+
+`putInput->hasDialogYesNo`
 
 </details>
 
 ---
-### `string putLineString(string &msg)`
+### `string putLineString`
 
 Пользовательский ввод. На основе `std::getline` получить всю строку до переноса. Конечные пробелы обрезаются. Пустая строка запрещается.
 
@@ -954,7 +924,7 @@ std::vector<std::string> userInputList = splitStringIntoList(putLineString(msg2)
 </details>
 
 ---
-### `int putNumeric(vector<int> &list, vector<int> &excludedList)`
+### `int putNumeric`
 
 Пользовательский ввод целого числа. 
 
@@ -1026,7 +996,7 @@ std::cout << putNumeric({1, 8}, {3,4,5}) << std::endl; // 1,2,6,7,8
 # Files and streams
 
 ---
-### `void outputListToStream(ostream &out, vector<vector<string>> &list, string &delim)`
+### `void outputListToStream`
 
 Печатает данные в указанный поток. Потоком может быть std::cout, а может быть и std::ofstream file. 
 Таким образом, данные можно или вывести на экран, или распечатать в файл.
@@ -1058,7 +1028,7 @@ void outputComplexToStream(std::ostream &out, vector<vector<string>> const &comp
 </details>
 
 ---
-### `bool hasFileExist(char* path)`
+### `bool hasFileExist`
 
 Проверяет существование файла
 
@@ -1086,7 +1056,7 @@ bool hasFileExist(const char* path) {
 
 
 ---
-### `void writeListToFile(char* path, vector<string> &list, bool isAppMode, string &delim)`
+### `void writeListToFile`
 
 Запись в файл. Печатает вектор в файл
 
@@ -1106,7 +1076,7 @@ void writeListToFile(const char* path, const std::vector<std::string> const &lis
 </details>
 
 ---
-### `bool readFileToList(char* pathName, vector<string> &list)`
+### `bool readFileToList`
 
 Чтение файла. Записывает файл в вектор. В случае успешного прочтения возвращает true
 
@@ -1137,7 +1107,7 @@ bool readFileToList(const char* pathName, std::vector<std::string> &list) {
 </details>
 
 ---
-### `void displayFileToScreen(char* pathName, string &msg)`
+### `void displayFileToScreen`
 
 Чтение файла. Записывает данные из файла в вектор и сразу печатает их на экран.
 
@@ -1169,7 +1139,7 @@ void displayFileToScreen(const char* pathName, const std::string const &msg) {
 </details>
 
 ---
-### `bool loadStringFromBinaryFile(char* fileName, string &str)`
+### `bool loadStringFromBinaryFile`
 
 Чтение из двоичного (бинарного) файла в строку. Возвращает true, если чтение прошло успешно
 
@@ -1220,7 +1190,7 @@ bool loadStringFromBinaryFile(const char* path, std::string &str) {
 </details>
 
 ---
-### `void saveStringToBinaryFile(char* path, string &str, bool isAppMode, char delim)`
+### `void saveStringToBinaryFile`
 
 Запись в двоичный (бинарный) файл из строки
 
@@ -1248,7 +1218,7 @@ void saveStringToBinaryFile(const char* path,
 </details>
 
 ---
-### `bool loadIntoArrFromBinaryFile(char* path, vector<T> &arr)`
+### `bool loadIntoArrFromBinaryFile`
 
 Читает из бинарного (двоичного) файла данные для массива структур.
 
@@ -1283,7 +1253,7 @@ bool loadIntoArrFromBinaryFile(const char* path, vector<T> &arr) {
 </details>
 
 ---
-### `bool readIntoPersonFromBinaryFile(ifstream &fileReader, character &person)`
+### `bool readIntoPersonFromBinaryFile`
 
 Читает из бинарного (двоичного) файла в структуру.
 
@@ -1324,7 +1294,7 @@ struct character { string name; int health; };
 </details>
 
 ---
-### `void savePersonToBinaryFile(char* path, character &person, bool isAppMode)`
+### `void savePersonToBinaryFile`
 
 Записывает в бинарный (двоичный) файл структуру.
 
@@ -1358,7 +1328,7 @@ struct character { string name; int salary; };
 # Map
 
 ---
-### `bool addEntryToMap(pair<F, S> &entry, map<F, S> &target)`
+### `bool addEntryToMap`
 
 Добавить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
 
@@ -1374,7 +1344,7 @@ bool addEntryToMap(const std::pair<F, S> &entry, std::map<F, S> &target) {
 ```
 
 ---
-### `bool changeEntryInMap(pair<F, S> &entry, map<F, S> &target)`
+### `bool changeEntryInMap`
 
 Изменить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
 
@@ -1391,7 +1361,7 @@ bool changeEntryInMap(const std::pair<F, S> &entry, std::map<F, S> &target) {
 ```
 
 ---
-### `bool removeEntryFromMap(F &key, map<F, S> &target)`
+### `bool removeEntryFromMap`
 
 Удалить одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
 
@@ -1409,7 +1379,7 @@ bool removeEntryFromMap(const F &key, std::map<F, S> &target) {
 ```
 
 ---
-### `bool retrieveMapValueByKey(S &target, F &key, map<F, S> &source)`
+### `bool retrieveMapValueByKey`
 
 Вернуть одну запись в std::map. Возвращает false, если записи по указанному ключу не обнаружено
 
@@ -1426,7 +1396,7 @@ bool retrieveMapValueByKey(S &target, const F &key, const std::map<F, S> &source
 }
 ```
 ---
-### `void removeEmptyEntriesFromMap(map<char, int> &out)`
+### `void removeEmptyEntriesFromMap`
 
 Позволяет удалить из std::map записи, значения которых равны нулю
 
@@ -1447,7 +1417,7 @@ void removeEmptyEntriesFromMap(std::map<char, int> &out) {
 # Time and Date
 
 ---
-### `bool isStringADate(string &str, string &cause)`
+### `bool isStringADate`
 
 Проверяет - является ли строка датой.
 Вторым аргументом передается строка, которая возвращает аккумулированный список ошибок, если они случились.
@@ -1501,7 +1471,7 @@ bool isStringADate(const std::string &str, std::string &cause) {
 </details>
 
 ---
-### `time_t putTime(char timeType, time_t basisTime)`
+### `time_t putTime`
 
 Пользовательский ввод времени или даты. Тип времени или даты задается в timeType.
 
@@ -1573,7 +1543,7 @@ time_t fullBirthDate = putTimeByFormat("YYYY/mm/dd");
 </details>
 
 ---
-### `bool hasLeapYear(time_t targetDate)`
+### `bool hasLeapYear`
 
 Определяет, является ли год високосным
 
@@ -1595,7 +1565,7 @@ bool hasLeapYear(time_t targetDate) {
 </details>
 
 ---
-### `int extractDayOfYearFromDate(time_t date)`
+### `int extractDayOfYearFromDate`
 
 Позволяет извлечь день из даты
 
@@ -1627,7 +1597,7 @@ int extractDayOfYearFromDate(time_t date) {
 </details>
 
 ---
-### `std::tm convertStringToTime(string &date)`
+### `std::tm convertStringToTime`
 
 Конвертирует строку в структуру std::tm. 
 
@@ -1664,7 +1634,7 @@ printf("%i/%i/%i\n", parse.tm_mday, (parse.tm_mon + 1), (parse.tm_year + 1900));
 </details>
 
 ---
-### `bool compareToSortByDay (time_t baseDate, time_t comparedDate)`
+### `bool compareToSortByDay`
 
 Выступает в качестве компаратора для сортировки дат
 
