@@ -1,3 +1,18 @@
+<style>
+details {
+  margin-left: 32px;
+  outline: 1px dashed rgba(255,255,255,0.8);
+  outline-offset: 6px;
+}
+summary > span {
+  color:tomato; 
+  font-size: 12px;
+}
+
+details + details {
+  margin-top: 16px;
+}
+</style>
 
 <!-- TOC -->
 * [Main](#main)
@@ -49,6 +64,7 @@
     * [`void removeEmptyEntriesFromMap`](#void-removeemptyentriesfrommap)
 * [Time and Date](#time-and-date)
     * [`bool isStringADate`](#bool-isstringadate)
+    * [`getRandomDate`](#getrandomdate)
     * [`time_t putTime`](#timet-puttime)
     * [`bool hasLeapYear`](#bool-hasleapyear)
     * [`int extractDayOfYearFromDate`](#int-extractdayofyearfromdate)
@@ -73,7 +89,7 @@ bool isIncludes(const T &range, const N &item) {
                        [&item](const N &c) { return c == item; });
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes  | depends | return | use in   | links to use                                                                                                  |
 |-----------|---------|--------|----------|---------------------------------------------------------------------------------------------------------------|
@@ -105,7 +121,7 @@ bool hasSubstr(const char *origin, const char *substr) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return | use in | links to use                                                                                                        |
 |----------|---------|--------|--------|---------------------------------------------------------------------------------------------------------------------|
@@ -126,7 +142,7 @@ bool isNumeric(const std::string &str) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes  | depends | return | links to use                                                                                                   |
 |-----------|---------|--------|----------------------------------------------------------------------------------------------------------------|
@@ -146,7 +162,7 @@ bool isContainsOnlyLetters(const std::string &str) {
     return it == str.end();
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes  | depends | return | links to use                                                                                                  |
 |-----------|---------|--------|---------------------------------------------------------------------------------------------------------------|
@@ -174,19 +190,46 @@ int findKeyIndexInVector(const T &key, const std::vector<T> &list) {
     return NOT_FOUND;
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes  | depends | return | use in | links to use |
 |-----------|---------|--------|--------|--------------|
 | algorithm |         | int    |        |              |
 
-Пример использования:
+<details><summary>Пример использования:</summary>
 
 ```c++
 int result = findKeyIndexInVector<string>("third", { "first", "second", "third" });
 
 if (result != 1) std::cout << result << std::endl;
 ```
+</details>
+<details><summary>Реализация поиска в массиве векторов:</summary>
+
+```c++
+int findKeyInVectors(const string &key, const std::vector<std::vector<string>> &list) {
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        int result = findKeyIndexInVector(key, *it);
+        if (result >= 0) {
+            return (int) std::distance(list.begin(), it);
+        }
+    }
+
+    return -1;
+}
+```
+Тогда:
+
+```c++
+vector<vector<string>> phones = {
+        { "234", "698" },
+        { "298" },
+        { "864", "236", "555" },
+        { "111", "222" },
+};
+std::cout << findKeyInVectors(key, phones) << std::endl;
+```
+</details>
 </details>
 
 --- 
@@ -206,7 +249,7 @@ bool removeKeyFromVector(const T &key, std::vector<T> &list) {
 }
 ```
 
-<details><summary>Дополнительная информация</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends              | return | use in | links to use |
 |----------|----------------------|--------|--------|--------------|
@@ -249,7 +292,7 @@ std::string getDelimitedString(const T &list, const char delim = ',') {
     return delimitedString;
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | return | use in   | prev name    |
 |----------|--------|----------|--------------|
@@ -293,7 +336,7 @@ void removeSymbolFromString(string &readjust, const char symbol, int leave = 0) 
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes  | depends | return | use in | links to use                                                                                                      |
 |-----------|---------|--------|--------|-------------------------------------------------------------------------------------------------------------------|
@@ -328,7 +371,7 @@ int getNumberOfDigit(int digit) {
     return count;
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return | links to use                                                                                                  | prev name  |
 |----------|---------|--------|---------------------------------------------------------------------------------------------------------------|------------|
@@ -346,7 +389,7 @@ int getRoundedIntWithStep(int val, int step = 10) {
     return (val + step / 2) / step * step;
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return | links to use                                                                                                  |
 |----------|---------|--------|---------------------------------------------------------------------------------------------------------------|
@@ -369,7 +412,7 @@ void flipArray (int (&arr)[T]) {
     }
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return | links to use                                                                                                          |
 |----------|---------|--------|-----------------------------------------------------------------------------------------------------------------------|
@@ -387,7 +430,7 @@ int getRandomIntInRange(int from, int to) {
     return (from + std::rand() % (to - from + 1)); // NOLINT(cert-msc50-cpp)
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 Для того чтобы случайное число всегда генерировалось заново, необходимо подключить ctime
 
@@ -422,7 +465,7 @@ int getAvailableIndexInRange(const std::vector<int> &range) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 Хорошо подходит для поиска свободного идентификатора
 
@@ -456,7 +499,7 @@ std::vector<N> removeIntersections(const vector<N> &list, const vector<N> &inter
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return   | links to use |
 |----------|---------|----------|--------------|
@@ -494,7 +537,7 @@ std::vector<T> getShuffleVector(const std::vector<T> &data) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends             | return   | links to use                          |
 |----------|---------------------|----------|---------------------------------------|
@@ -521,7 +564,7 @@ std::vector<T> getCopyVector(const std::vector<T> &data, int amount = 0, int fir
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes  | depends | return   | links to use                          |
 |-----------|---------|----------|---------------------------------------|
@@ -545,7 +588,7 @@ std::vector<T> getShuffledCopyOfVectorRange(const std::vector<T> &data, int amou
 
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends                            | return   | links to use                          |
 |----------|------------------------------------|----------|---------------------------------------|
@@ -569,7 +612,7 @@ std::string getTrimmedString(std::string str, const std::string &whiteSpaces = "
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return | links to use                                                                                                          |
 |----------|---------|--------|-----------------------------------------------------------------------------------------------------------------------|
@@ -603,7 +646,7 @@ std::vector<std::string> splitStringIntoList(const std::string &str, const char 
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends          | return            | use in     | links to use                                                                                                  | prev name               |
 |----------|------------------|-------------------|------------|---------------------------------------------------------------------------------------------------------------|-------------------------|
@@ -642,7 +685,7 @@ bool convertDoubleFromString(const std::string &str, double &out) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 Можно было бы использовать strtod(str.c_str(), nullptr), который не выбрасывает исключение.
 
@@ -698,8 +741,7 @@ template<typename T> T putInput(const std::string &restrictions = "") {
 }
 ```
 
-<details open>
-<summary><span style="color:tomato;font-size: 12px">Максимально сокращённый вариант</span></summary>
+<details open><summary><span>Максимально сокращённый вариант</span></summary>
 
 ```c++
 void resetBuffer() {
@@ -726,8 +768,7 @@ double putInput() {
 }
 ```
 </details>
-<details>
-<summary><span style="color:tomato;font-size: 12px">Дополнительно</span></summary>
+<details><summary><span>INFO</span></summary>
 
 Есть ещё несколько специфичных параллельных функций:
 
@@ -784,8 +825,7 @@ std::string putNumberAsString(const std::string &msg, int charCount = 1) {
 }
 ```
 
-<details>
-<summary><span style="color:tomato;font-size: 12px">Дополнительно</span></summary>
+<details><summary><span>INFO</span></summary>
 
 Основывается на аналоге `putInput` - `putChar`:
 
@@ -799,7 +839,7 @@ char putChar(bool isEnd, const std::string &current) {
     const std::string &allowedList = "0123456789";
     char input;
 
-    while (true) {
+    while (!isEnd) {
         std::cin >> input;
 
         if (std::cin.fail() || (allowedList.length() && !isIncludes(allowedList, input))) {
@@ -842,7 +882,7 @@ auto phone = putNumberAsString("Enter phone", 10);
 Требует ввод от пользователя одного из элементов переданного списка. Возвращает индекс выбранного элемента списка.
 
 ```c++
-int selectMenuItem(const std::vector<std::string> &list, const std::string &msg = "Select from") {
+int selectMenuItem(const std::vector<std::string> &list, const std::string &msg = "Select and") {
     string commands;
     for (const auto &item : list)
         commands += (item + (item != list[list.size() - 1] ? "|" : ""));
@@ -859,7 +899,8 @@ int selectMenuItem(const std::vector<std::string> &list, const std::string &msg 
     }
 }
 ```
-<details><summary>Дополнительная информация</summary>
+
+<details><summary><span>INFO</span></summary>
 
 Примеры: 
 
@@ -901,7 +942,7 @@ std::string putLineString(const std::string &msg) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 Есть ещё несколько специфичных параллельных функций:
 
@@ -963,7 +1004,7 @@ int putNumeric(const std::vector<int> &list = {}, const std::vector<int> &exclud
 
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends  | return | links to use                                                                                                  | prevname       |
 |----------|----------|--------|---------------------------------------------------------------------------------------------------------------|----------------|
@@ -1007,7 +1048,8 @@ void outputListToStream(std::ostream &out, const std::vector<T> &list, const std
     for (const auto &item : list) out << item << (item != list[list.size() - 1] ? delim : "\n");
 }
 ```
-<details><summary>Дополнительные данные</summary>
+
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return | links to use           | prev name                                        |
 |----------|---------|--------|------------------------|--------------------------------------------------|
@@ -1046,7 +1088,7 @@ bool hasFileExist(const char* path) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return | links to use                                                                                                   | prev name   |
 |----------|---------|--------|----------------------------------------------------------------------------------------------------------------|-------------|
@@ -1067,7 +1109,8 @@ void writeListToFile(const char* path, const std::vector<std::string> const &lis
     file.close();
 }
 ```
-<details><summary>Дополнительные данные</summary>
+
+<details><summary><span>INFO</span></summary>
 
 | includes | depends            | return | links to use           | prev name              |
 |----------|--------------------|--------|------------------------|------------------------|
@@ -1098,7 +1141,8 @@ bool readFileToList(const char* pathName, std::vector<std::string> &list) {
     return isReadSuccessfully;
 }
 ```
-<details><summary>Дополнительные данные</summary>
+
+<details><summary><span>INFO</span></summary>
 
 | includes | depends | return | links to use           | prev name        |
 |----------|---------|--------|------------------------|------------------|
@@ -1130,7 +1174,8 @@ void displayFileToScreen(const char* pathName, const std::string const &msg) {
     }
 }
 ```
-<details><summary>Дополнительные данные</summary>
+
+<details><summary><span>INFO</span></summary>
 
 | includes | depends                               | return | links to use           |
 |----------|---------------------------------------|--------|------------------------|
@@ -1164,7 +1209,7 @@ bool loadStringFromBinaryFile(const char* path, std::string &str) {
     return isReadSuccessfully;
 }
 ```
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes | depends      | return | links to use                                                                                                   | past name          |
 |----------|--------------|--------|----------------------------------------------------------------------------------------------------------------|--------------------|
@@ -1209,7 +1254,8 @@ void saveStringToBinaryFile(const char* path,
     file.close();
 }
 ```
-<details><summary>Дополнительные данные</summary>
+
+<details><summary><span>INFO</span></summary>
 
 | includes | depends      | return | links to use                                                                                                            | past name         |
 |----------|--------------|--------|-------------------------------------------------------------------------------------------------------------------------|-------------------|
@@ -1243,7 +1289,8 @@ bool loadIntoArrFromBinaryFile(const char* path, vector<T> &arr) {
     return isFileFound;
 }
 ```
-<details><summary>Дополнительные данные</summary>
+
+<details><summary><span>INFO</span></summary>
 
 | includes | depends                      | return | links to use |
 |----------|------------------------------|--------|--------------|
@@ -1276,7 +1323,8 @@ bool readIntoPersonFromBinaryFile(std::ifstream &fileReader, character &person) 
     return isItemReadSuccessfully;
 }
 ```
-<details><summary>Дополнительные данные</summary>
+
+<details><summary><span>INFO</span></summary>
 
 Функция выступает лишь как пример, шаблон.
 
@@ -1310,7 +1358,8 @@ void savePersonToBinaryFile(const char* path, const character &person, bool isAp
     file.close();
 }
 ```
-<details><summary>Дополнительные данные</summary>
+
+<details><summary><span>INFO</span></summary>
 
 | includes | depends                   | return | links to use |
 |----------|---------------------------|--------|--------------|
@@ -1408,7 +1457,7 @@ void removeEmptyEntriesFromMap(std::map<char, int> &out) {
     }
 }
 ```
-<details><summary>Дополнительно</summary>
+<details><summary><span>INFO</span></summary>
 
 Необходимо в будущем добавить template, сделав метод более универсальным
 
@@ -1459,7 +1508,7 @@ bool isStringADate(const std::string &str, std::string &cause) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 Данная функция пока узко специализирована и, несмотря на то, что выполняет задачу проверки строки, требует доработки.
 Однако она вполне рабочая и может служить общим шаблоном для решения подобных задач.
@@ -1467,6 +1516,43 @@ bool isStringADate(const std::string &str, std::string &cause) {
 | includes | depends                                                | return | links to use                                                                                                   | prev name |
 |----------|--------------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------|-----------|
 |          | isNumeric<br/>getTrimmedString<br/>splitStringIntoList | bool   | [20_5_1](https://github.com/VladislavNovak/20_5_1/blob/ffa6db6840c82b32353f1714d6b7aaca3a6bcad2/main.cpp#L118) | isDate    |
+
+</details>
+
+---
+
+### `getRandomDate`
+
+Получить случайную дату в диапазоне.
+
+```c++
+std::stringstream convertStringsToSS(const std::vector<std::string> &dates) {
+    std::string delim = " ";
+    std::stringstream ss;
+    std::copy(dates.begin(), dates.end(), std::ostream_iterator<std::string>(ss, delim.c_str()));
+    return ss;
+}
+
+std::time_t getRandomDate() {
+    std::vector<std::vector<int>> parts = { { 1970, 2022 }, { 1, 12 }, { 1, 31 } };
+    std::vector<std::string> dates;
+    for (const auto &part : parts) {
+        dates.emplace_back(std::to_string(getRandomIntInRange(part[0], part[1])));
+    }
+
+    std::time_t now = time(nullptr);
+    std::tm toParse = *localtime(&now);
+    auto ss = convertStringsToSS(dates);
+    ss >> std::get_time(&toParse, "%Y %m %d");
+    return mktime(&toParse);
+}
+```
+
+<details><summary><span>INFO</span></summary>
+
+- нужно включить <i>sstream</i>
+- <i>convertStringsToSS</i> позволяет конвертировать vector в объект stringstream
+- <i>convertStringsToSS</i> если будет необходимость, вывести в отдельную функцию как template
 
 </details>
 
@@ -1503,7 +1589,8 @@ time_t putTime(char timeType, time_t basisTime) {
     }
 }
 ```
-<details><summary>Дополнительная информация</summary>
+
+<details><summary><span>INFO</span></summary>
 
 Необходимо включить заголовок:
 
@@ -1555,7 +1642,7 @@ bool hasLeapYear(time_t targetDate) {
 }
 ```
 
-<details><summary>Дополнительная информация</summary>
+<details><summary><span>INFO</span></summary>
 
 Необходимо включить заголовок:
 
@@ -1581,7 +1668,8 @@ int extractDayOfYearFromDate(time_t date) {
     return (local.tm_yday + corrective);
 }
 ```
-<details><summary>Дополнительная информация</summary>
+
+<details><summary><span>INFO</span></summary>
 
 Необходимо включить заголовок:
 
@@ -1611,7 +1699,7 @@ std::tm convertStringToTime(const string &date) {
 }
 ```
 
-<details><summary>Дополнительная информация</summary>
+<details><summary><span>INFO</span></summary>
 
 Необходимо включить:
 
@@ -1648,7 +1736,7 @@ bool compareToSortByDay (const time_t baseDate, const time_t comparedDate) {
 }
 ```
 
-<details><summary>Дополнительные данные</summary>
+<details><summary><span>INFO</span></summary>
 
 | includes            | depends | return | links to use |
 |---------------------|---------|--------|--------------|
