@@ -1,7 +1,7 @@
 <style>
 details {
   margin-left: 32px;
-  outline: 1px dashed rgba(255,255,255,0.8);
+  outline: 1px dashed rgb(128,128,128);
   outline-offset: 6px;
 }
 summary > span {
@@ -39,7 +39,7 @@ details + details {
   * [Convert](#convert)
     * [`bool convertDoubleFromString`](#bool-convertdoublefromstring)
     * [`string convertListToString`](#string-convertlisttostring)
-    * [`stringstream convertListToStream`](#stringstream-convertlisttostream)
+    * [`stringstream joinListToStream`](#stringstream-joinlisttostream)
 * [User input](#user-input)
     * [`T putInput`](#t-putinput)
     * [`string putNumberAsString`](#string-putnumberasstring)
@@ -697,35 +697,35 @@ convertListToString(somethingString); // "s,t,r,i,n,g"
 convertListToString(someThingRange); // "2,4,5"
 ```
 
-Аналогично по поведению convertListToStream
+Аналогично по поведению joinListToStream
 
 </details>
 
 ---
-### `stringstream convertListToStream`
+### `stringstream joinListToStream`
 
 Объединяет вектор в поток stringstream
 
 ```c++
-std::stringstream convertListToStream(const std::vector<std::string> &list, const char* delim = " ") {
+template<typename T>
+std::stringstream joinListToStream(const std::vector<T> &list, const char* delim = ", ") {
     std::stringstream ss;
-    std::copy(list.begin(), std::prev(list.end()), std::ostream_iterator<std::string>(ss, delim));
+    std::copy(list.begin(), std::prev(list.end()), std::ostream_iterator<T>(ss, delim));
     if (!list.empty()) { ss << list.back(); }
     return ss;
 }
 ```
 <details><summary><span>INFO</span></summary>
 
-| includes | return       | use in        | prev name          |
-|----------|--------------|---------------|--------------------|
-|          | stringstream | getRandomDate | convertStringsToSS |
+| includes | return       | use in        | prev name                                  |
+|----------|--------------|---------------|--------------------------------------------|
+|          | stringstream | getRandomDate | convertStringsToSS<br/>convertListToStream |
 
 Примеры использования:
 
 ```c++
-vector<string> list = { "first", "second" };
-
-printf("Enter %s:", convertListToStream(constraints, ", ").str().c_str()); // "first, second"
+std::cout << joinListToStream({ "first", "second" }, " - ").str(); // "first, second"
+std::cout << joinListToStream({ 1,2,3 }, " - ").str(); // "1,2,3"
 ```
 
 Аналогично по поведению convertListToString
@@ -1007,45 +1007,39 @@ std::vector<std::string> userInputList = splitStringIntoList(putLineString(msg2)
 Пользовательский ввод целого числа. 
 
 ```c++
-int putNumeric(const std::vector<int> &list = {}, const std::vector<int> &excludedList = {}) {
-
+int putNumeric(const std::vector<int> &list = {}, const std::vector<int> &excludedList = {}, const std::string &msg = "") {
     bool isRange = (list.size() == 2) && (list[0] < list[1]);
     bool isList = !list.empty() && (list.size() != 2 || ((list.size() == 2) && (list[0] > list[1])));
     bool isExcluded = !excludedList.empty();
 
+    std::cout << "Enter";
+    if (isRange) std::cout << " (in the range "  << joinListToStream(list, " - ").str() << ")";
+    else if (isList) std::cout << " (in a list of " << joinListToStream(list).str() << ")";
+    if (isExcluded) std::cout << " (excluded " << joinListToStream(excludedList).str() << ")";
+    std::cout << (msg.length() ? " " + msg + ":" : ":");
+
+    int userInput;
+
     while (true) {
+        userInput = putInput();
+
         bool isTrouble = false;
-        cout << "Введите цифры" << ": ";
-        int userInput = putInput<int>();
-
-        vector<std::string> troubles;
-
         if (isRange && (userInput < list[0] || userInput > list[1])) isTrouble = true;
         if (isList && !isIncludes(list, userInput)) isTrouble = true;
         if (isExcluded && isIncludes(excludedList, userInput)) isTrouble = true;
 
-        if (isTrouble) {
-            troubles.emplace_back("Попробуйте снова. Это должно быть целое число");
-            if (isRange) troubles.emplace_back("  и в диапазоне (" + std::to_string(list[0]) + " - " + std::to_string(list[1]) + ")");
-            if (isList) troubles.emplace_back("  и в списке из (" + convertListToString(list) + ")");
-            if (isExcluded) troubles.emplace_back("  и не входить в список из (" + convertListToString(excludedList) + ")");
-
-            for (auto const &trouble : troubles) cout << trouble << endl;
-
-            continue;
-        }
-
-        return userInput;
+        if (!isTrouble) { break; }
+        std::cout << "Error.Try again:";
     }
+    return userInput;
 }
-
 ```
 
 <details><summary><span>INFO</span></summary>
 
-| includes | depends  | return | links to use                                                                                                  | prevname       |
-|----------|----------|--------|---------------------------------------------------------------------------------------------------------------|----------------|
-|          | putInput | int    | [20_5_2](https://github.com/VladislavNovak/20_5_2/blob/9903c48eb00e52b82c5d20b3bd6b8d1ff11931e5/main.cpp#L71) | getUserNumeric |
+| includes | depends                       | return | prevname       |
+|----------|-------------------------------|--------|----------------|
+|          | putInput<br/>joinListToStream | int    | getUserNumeric |
 
 
 Ввести возможно:
@@ -1572,7 +1566,7 @@ std::time_t getRandomDate() {
 
     std::time_t now = time(nullptr);
     std::tm toParse = *localtime(&now);
-    auto ss = convertListToStream(dates);
+    auto ss = joinListToStream(dates);
     ss >> std::get_time(&toParse, "%Y %m %d");
     return mktime(&toParse);
 }
@@ -1580,9 +1574,9 @@ std::time_t getRandomDate() {
 
 <details><summary><span>INFO</span></summary>
 
-| includes             | depends             | return |
-|----------------------|---------------------|--------|
-| sstream<br/>iterator | convertListToStream | time_t |
+| includes             | depends          | return |
+|----------------------|------------------|--------|
+| sstream<br/>iterator | joinListToStream | time_t |
 
 </details>
 
