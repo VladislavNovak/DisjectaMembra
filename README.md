@@ -24,7 +24,6 @@ details + details {
   * [General](#general)
     * [`int findKeyIndexInVector`](#int-findkeyindexinvector)
     * [`bool removeKeyFromVector`](#bool-removekeyfromvector)
-    * [`string getDelimitedString`](#string-getdelimitedstring)
     * [`void removeSymbolFromString`](#void-removesymbolfromstring)
     * [`int getNumberOfDigit`](#int-getnumberofdigit)
     * [`int getRoundedIntWithStep`](#int-getroundedintwithstep)
@@ -39,6 +38,8 @@ details + details {
     * [`vector<string> splitStringIntoList`](#vectorstring-splitstringintolist)
   * [Convert](#convert)
     * [`bool convertDoubleFromString`](#bool-convertdoublefromstring)
+    * [`string convertListToString`](#string-convertlisttostring)
+    * [`stringstream convertListToStream`](#stringstream-convertlisttostream)
 * [User input](#user-input)
     * [`T putInput`](#t-putinput)
     * [`string putNumberAsString`](#string-putnumberasstring)
@@ -274,41 +275,6 @@ removeKeyFromVector(2, range); // 5, 4
 ```
 
 </details>
-
----
-### `string getDelimitedString`
-
-Возвращает новую строку со знаками, разделенными аргументом delim 
-
-```c++
-template<typename T>
-std::string getDelimitedString(const T &list, const char delim = ',') {
-    std::string delimitedString;
-    for (int i = 0; i < list.size(); ++i) {
-        delimitedString += std::to_string(list[i]);
-        if (i != list.size() - 1) delimitedString += delim;
-    }
-
-    return delimitedString;
-}
-```
-<details><summary><span>INFO</span></summary>
-
-| includes | return | use in   | prev name    |
-|----------|--------|----------|--------------|
-|          | string | putInput | getJoinRange |
-
-</details>
-
-Примеры использования:
-
-```c++
-string somethingString = "string";
-vector<int> someThingRange = {2,4,5};
-
-getDelimitedString(somethingString); // "s,t,r,i,n,g"
-getDelimitedString(someThingRange); // "2,4,5"
-```
 
 ---
 ### `void removeSymbolFromString`
@@ -695,6 +661,77 @@ bool convertDoubleFromString(const std::string &str, double &out) {
 
 </details>
 
+---
+### `string convertListToString`
+
+Два варианта использования:
+
+- Соединяет vector чилел, возвращая строку со знаками, разделенными аргументом delim
+- Возвращает копию строки знаки которой разделены аргументом delim
+
+```c++
+template<typename T>
+std::string convertListToString(const T &list, const char delim = ',') {
+    std::string delimitedString;
+    for (int i = 0; i < list.size(); ++i) {
+        delimitedString += std::to_string(list[i]);
+        if (i != list.size() - 1) delimitedString += delim;
+    }
+
+    return delimitedString;
+}
+```
+<details><summary><span>INFO</span></summary>
+
+| includes | return | use in   | prev name                           |
+|----------|--------|----------|-------------------------------------|
+|          | string | putInput | getJoinRange<br/>getDelimitedString |
+
+Примеры использования:
+
+```c++
+string somethingString = "string";
+vector<int> someThingRange = {2,4,5};
+
+convertListToString(somethingString); // "s,t,r,i,n,g"
+convertListToString(someThingRange); // "2,4,5"
+```
+
+Аналогично по поведению convertListToStream
+
+</details>
+
+---
+### `stringstream convertListToStream`
+
+Объединяет вектор в поток stringstream
+
+```c++
+std::stringstream convertListToStream(const std::vector<std::string> &list, const char* delim = " ") {
+    std::stringstream ss;
+    std::copy(list.begin(), std::prev(list.end()), std::ostream_iterator<std::string>(ss, delim));
+    if (!list.empty()) { ss << list.back(); }
+    return ss;
+}
+```
+<details><summary><span>INFO</span></summary>
+
+| includes | return       | use in        | prev name          |
+|----------|--------------|---------------|--------------------|
+|          | stringstream | getRandomDate | convertStringsToSS |
+
+Примеры использования:
+
+```c++
+vector<string> list = { "first", "second" };
+
+printf("Enter %s:", convertListToStream(constraints, ", ").str().c_str()); // "first, second"
+```
+
+Аналогично по поведению convertListToString
+
+</details>
+
 # User input
 
 ---
@@ -727,7 +764,7 @@ template<typename T> T putInput(const std::string &restrictions = "") {
 
         if ((restrictions.length() && isIncludes(restrictions, input)) || restrictions.empty()) break;
 
-        printf(warning, input, getDelimitedString(restrictions).c_str());
+        printf(warning, input, convertListToString(restrictions).c_str());
 
         // Сбрасываем коматозное состояние cin и очищаем потом ввода
         std::cin.clear();
@@ -762,7 +799,7 @@ double putInput() {
         }
         break;
     }
-    resetBuffer()
+    resetBuffer();
     
     return input;
 }
@@ -779,7 +816,7 @@ double putInput() {
 
 | includes | depends                           | return | use in | links to use                                                                                                  | prev name                    |
 |----------|-----------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|------------------------------|
-| limits   | isIncludes<br/>getDelimitedString | T      |        | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L29) | getUserChar<br/>getUserInput |
+| limits   | isIncludes<br/>convertListToString | T      |        | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L29) | getUserChar<br/>getUserInput |
 
 
 Примеры использования:
@@ -990,8 +1027,8 @@ int putNumeric(const std::vector<int> &list = {}, const std::vector<int> &exclud
         if (isTrouble) {
             troubles.emplace_back("Попробуйте снова. Это должно быть целое число");
             if (isRange) troubles.emplace_back("  и в диапазоне (" + std::to_string(list[0]) + " - " + std::to_string(list[1]) + ")");
-            if (isList) troubles.emplace_back("  и в списке из (" + getDelimitedString(list) + ")");
-            if (isExcluded) troubles.emplace_back("  и не входить в список из (" + getDelimitedString(excludedList) + ")");
+            if (isList) troubles.emplace_back("  и в списке из (" + convertListToString(list) + ")");
+            if (isExcluded) troubles.emplace_back("  и не входить в список из (" + convertListToString(excludedList) + ")");
 
             for (auto const &trouble : troubles) cout << trouble << endl;
 
@@ -1526,13 +1563,6 @@ bool isStringADate(const std::string &str, std::string &cause) {
 Получить случайную дату в диапазоне.
 
 ```c++
-std::stringstream convertStringsToSS(const std::vector<std::string> &dates) {
-    std::string delim = " ";
-    std::stringstream ss;
-    std::copy(dates.begin(), dates.end(), std::ostream_iterator<std::string>(ss, delim.c_str()));
-    return ss;
-}
-
 std::time_t getRandomDate() {
     std::vector<std::vector<int>> parts = { { 1970, 2022 }, { 1, 12 }, { 1, 31 } };
     std::vector<std::string> dates;
@@ -1542,7 +1572,7 @@ std::time_t getRandomDate() {
 
     std::time_t now = time(nullptr);
     std::tm toParse = *localtime(&now);
-    auto ss = convertStringsToSS(dates);
+    auto ss = convertListToStream(dates);
     ss >> std::get_time(&toParse, "%Y %m %d");
     return mktime(&toParse);
 }
@@ -1550,9 +1580,9 @@ std::time_t getRandomDate() {
 
 <details><summary><span>INFO</span></summary>
 
-- нужно включить <i>sstream</i>
-- <i>convertStringsToSS</i> позволяет конвертировать vector в объект stringstream
-- <i>convertStringsToSS</i> если будет необходимость, вывести в отдельную функцию как template
+| includes             | depends             | return |
+|----------------------|---------------------|--------|
+| sstream<br/>iterator | convertListToStream | time_t |
 
 </details>
 
