@@ -36,6 +36,7 @@ details + details {
     * [`vector<T> getShuffledCopyOfVectorRange`](#vectort-getshuffledcopyofvectorrange)
     * [`string getTrimmedString`](#string-gettrimmedstring)
     * [`vector<string> splitStringIntoList`](#vectorstring-splitstringintolist)
+    * [`void capitalize`](#void-capitalize)
   * [Convert](#convert)
     * [`bool convertDoubleFromString`](#bool-convertdoublefromstring)
     * [`string convertListToString`](#string-convertlisttostring)
@@ -71,6 +72,8 @@ details + details {
     * [`int extractDayOfYearFromDate`](#int-extractdayofyearfromdate)
     * [`std::tm convertStringToTime`](#stdtm-convertstringtotime)
     * [`bool compareToSortByDay`](#bool-comparetosortbyday)
+  * [Patterns](#patterns)
+    * [`create class with massive of subclass`](#create-class-with-massive-of-subclass)
 <!-- TOC -->
 
 # Main
@@ -202,7 +205,7 @@ int findKeyIndexInVector(const T &key, const std::vector<T> &list) {
 ```c++
 int result = findKeyIndexInVector<string>("third", { "first", "second", "third" });
 
-if (result != 1) std::cout << result << std::endl;
+if (result != -1) std::cout << result << std::endl;
 ```
 </details>
 <details><summary>Реализация поиска в массиве векторов:</summary>
@@ -631,6 +634,28 @@ std::string getUserWord(std::string const &msg) {
 ```
 </details>
 
+
+---
+### `void capitalize`
+
+Делает первую букву заглавной
+
+```c++
+void capitalize(std::string &target) {
+    if (!target.length()) { return; }
+    target[0] = std::toupper(target[0]); // NOLINT(*-narrowing-conversions)
+}
+```
+
+<details><summary><span>INFO</span></summary>
+
+
+| includes | depends | return | links to use |
+|----------|---------|--------|--------------|
+| cctype   |         |        |              |
+
+</details>
+
 ## Convert
 
 ---
@@ -781,27 +806,19 @@ template<typename T> T putInput(const std::string &restrictions = "") {
 <details open><summary><span>Максимально сокращённый вариант</span></summary>
 
 ```c++
-void resetBuffer() {
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
-
-double putInput() {
-    double input;
-
+int putInput() {
+    int input;
     while (true) {
         std::cin >> input;
-
         if (std::cin.fail()) {
-            resetBuffer();
-            std::cout << "Input is invalid. Please try again: ";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Input is invalid. Please try again:";
             continue;
         }
-        break;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return input;
     }
-    resetBuffer();
-    
-    return input;
 }
 ```
 </details>
@@ -814,8 +831,8 @@ double putInput() {
 - `putNumeric` (получение числа в диапазоне)
 - `selectMenuItem` (получить одну из опций)
 
-| includes | depends                           | return | use in | links to use                                                                                                  | prev name                    |
-|----------|-----------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|------------------------------|
+| includes | depends                            | return | use in | links to use                                                                                                  | prev name                    |
+|----------|------------------------------------|--------|--------|---------------------------------------------------------------------------------------------------------------|------------------------------|
 | limits   | isIncludes<br/>convertListToString | T      |        | [19_5_2](https://github.com/VladislavNovak/19_5_2/blob/ea64d23ae5fc13594a1d51dad3aed8790f77872a/main.cpp#L29) | getUserChar<br/>getUserInput |
 
 
@@ -919,18 +936,15 @@ auto phone = putNumberAsString("Enter phone", 10);
 Требует ввод от пользователя одного из элементов переданного списка. Возвращает индекс выбранного элемента списка.
 
 ```c++
-int selectMenuItem(const std::vector<std::string> &list, const std::string &msg = "Select and") {
-    string commands;
-    for (const auto &item : list)
-        commands += (item + (item != list[list.size() - 1] ? "|" : ""));
-
-    printf("%s enter (%s):", msg.c_str(), commands.c_str());
+int selectMenuItem(const std::vector<std::string> &list, const std::string &msg = "Choose between options") {
+    std::cout << msg << " (";
+    for (const auto &item : list) { std::cout << item << ((item != list[list.size() - 1]) ? "|" : "):"); }
+    
     while (true) {
         std::string userInput;
-        std::getline(std::cin, userInput);
+        std::getline(std::cin >> std::ws, userInput);
 
-        for (int i = 0; i < list.size(); ++i)
-            if (list[i] == userInput) return i;
+        for (int i = 0; i < list.size(); ++i) { if (list[i] == userInput) return i; }
 
         std::cout << "Error. Try again:";
     }
@@ -964,10 +978,10 @@ auto index = selectMenuItem({ "add", "edit", "about", "exit" });
 
 ```c++
 std::string putLineString(const std::string &msg) {
-    printf("%s: ", msg.c_str());
+    std::cout << msg << ":";
     while (true) {
         std::string userLineString;
-        std::getline(std::cin, userLineString);
+        std::getline(std::cin >> std::ws, userLineString);
 
         if (userLineString.empty()) {
             std::cout << "The string cannot be empty. Try again:";
@@ -1771,6 +1785,80 @@ bool compareToSortByDay (const time_t baseDate, const time_t comparedDate) {
 ```c++
 std::sort(std::begin(listOfBirthdays), std::end(listOfBirthdays), compareToSortByDay)
 ```
+</details>
+
+## Patterns
+
+---
+### `create class with massive of subclass`
+
+Объект содержит массив объектов другого класса. Важно: массив обычный, не vector
+
+Псевдокод:
+
+```text
+class A {};
+class B {
+    A** arr = nullptr;
+  public:
+    Second(x, y) {
+        arr = new A*[x];
+        for (i) { a[i] = new A(y); }
+    }
+    A* getItem(i) { return (i > && i <) ? arr[i] : nullptr;
+}
+```
+<details>
+<summary><span>Пример:</span></summary>
+
+```c++
+class TrainCar {
+    int passengers = 0;
+    int passengersMax = 0;
+public:
+    explicit TrainCar(int inPassengerMax) : passengersMax(inPassengerMax) {}
+
+    void load(int value) {
+        passengers += value;
+        if (passengers > passengersMax) {
+            passengers = passengersMax;
+        }
+    }
+};
+
+class Train {
+    int count = 0;
+    // Важно: указатель на начало массива динамически созданных объектов
+    TrainCar** cars;
+public:
+    Train(int inCount, int inPassengerMax) : count(inCount) {
+    cars = new TrainCar*[inCount];
+    for (int i = 0; i < inCount; ++i) {
+        cars[i] = new TrainCar(inPassengerMax);
+    }
+}
+
+    // Важно: можем получить элемент массива TrainCar
+    TrainCar* getCarAt(int index) {
+        return (index < 0 || index >= count) ? nullptr : cars[index];
+    }
+
+    int getCount() const { return count; }
+};
+```
+Использование:
+```c++
+int main() {
+    // Важно: можем теперь создать объект, который содержит массив с TrainCar
+    auto* train = new Train(2, 5);
+    for (int i = 0; i < train->getCount(); ++i) {
+        int pass;
+        std::cin >> pass;
+        train->getCarAt(i)->load(pass);
+    }
+}
+```
 
 </details>
+
 
