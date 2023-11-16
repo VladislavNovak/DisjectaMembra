@@ -22,6 +22,7 @@ details + details {
     * [`bool isNumeric`](#bool-isnumeric)
     * [`bool isContainsOnlyLetters`](#bool-iscontainsonlyletters)
   * [General](#general)
+    * [`popFront`](#popfront)
     * [`int findKeyIndexInVector`](#int-findkeyindexinvector)
     * [`bool removeKeyFromVector`](#bool-removekeyfromvector)
     * [`void removeSymbolFromString`](#void-removesymbolfromstring)
@@ -41,6 +42,8 @@ details + details {
     * [`bool convertDoubleFromString`](#bool-convertdoublefromstring)
     * [`string convertListToString`](#string-convertlisttostring)
     * [`stringstream joinListToStream`](#stringstream-joinlisttostream)
+  * [Math](#math)
+    * [`double getTriangleHeight`](#double-gettriangleheight)
 * [User input](#user-input)
     * [`T putInput`](#t-putinput)
     * [`string putNumberAsString`](#string-putnumberasstring)
@@ -72,7 +75,7 @@ details + details {
     * [`int extractDayOfYearFromDate`](#int-extractdayofyearfromdate)
     * [`std::tm convertStringToTime`](#stdtm-convertstringtotime)
     * [`bool compareToSortByDay`](#bool-comparetosortbyday)
-  * [Patterns](#patterns)
+* [Patterns](#patterns)
     * [`create class with massive of subclass`](#create-class-with-massive-of-subclass)
 <!-- TOC -->
 
@@ -175,6 +178,20 @@ bool isContainsOnlyLetters(const std::string &str) {
 </details>
 
 ## General
+
+### `popFront`
+
+Извлекает первый элемент из вектора. В самом векторе он уничтожается. 
+Важно: проверку наличия элементов в векторе необходимо проводить ДО функции.
+
+```c++
+template<typename T>
+T popFront (std::vector<T> &list) {
+    T temp = list.front();
+    list.erase(list.begin());
+    return temp;
+}
+```
 
 ---
 ### `int findKeyIndexInVector`
@@ -756,6 +773,19 @@ std::cout << joinListToStream({ 1,2,3 }, " - ").str(); // "1,2,3"
 Аналогично по поведению convertListToString
 
 </details>
+
+## Math
+
+---
+### `double getTriangleHeight`
+
+Получить высоту треугольника
+
+```c++
+double getTriangleHeight(double hyp, double cat) {
+    return std::sqrt(hyp * hyp -  std::pow(cat / 2, 2));
+}
+```
 
 # User input
 
@@ -1787,7 +1817,7 @@ std::sort(std::begin(listOfBirthdays), std::end(listOfBirthdays), compareToSortB
 ```
 </details>
 
-## Patterns
+# Patterns
 
 ---
 ### `create class with massive of subclass`
